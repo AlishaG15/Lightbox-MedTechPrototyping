@@ -2,6 +2,15 @@
 
 Arduino-based firmware developed in the PlatformIO development environment.
 
+## Troubleshooting
+```
+avrdude: ser_open(): can't open device "/dev/ttyACM0": Permission denied
+```
+
+Make sure that you set permissions to allow your device connected via USB to be
+accessed via VS Code:
+https://support.arduino.cc/hc/en-us/articles/360016495679-Fix-port-access-on-Linux
+
 ## Resources
 * https://docs.arduino.cc/resources/datasheets/ABX00028-datasheet.pdf
 * https://docs.arduino.cc/resources/datasheets/ABX00031-datasheet.pdf
