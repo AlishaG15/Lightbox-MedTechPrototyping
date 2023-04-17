@@ -1,6 +1,6 @@
 // LOAD ALL LIBRARIES FIRST
 #include <Arduino.h>
-#include <avr/sleep.h>
+#include <avr/sleep.h>  // only works for the AVR-based boards; not the Nano 33 BLE
 
 // DEFINE ALL PREPROCESSOR MACROS
 // see pinout in datasheet to know what pins are where / do what
@@ -57,10 +57,10 @@ void loop() {
     {
         digitalWrite(LED_PIN, 0);
         Serial.println("Bored; nothing to do... going to sleep.");
-        sleep_enable();
-        set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-        delay(SLEEP_DELAY_MS);
-        sleep_cpu();
+        sleep_enable();  // dependent on avr/sleep.h
+        set_sleep_mode(SLEEP_MODE_PWR_DOWN); // dependent on avr/sleep.h
+        delay(SLEEP_DELAY_MS);  // delay a bit to make sure chip has everything done before sleeping
+        sleep_cpu(); // dependent on avr/sleep.h
     }
     
 }
