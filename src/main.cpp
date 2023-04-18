@@ -6,15 +6,20 @@
 // see pinout in datasheet to know what pins are where / do what
 #define LED_PIN 13  // D13
 #define BUTTON_INTERRUPT_PIN 2 // D2
-#define LED_BLINK_DELAY_MS 100
+#define ASTABLE_POT_PIN A0
 #define ONE_SHOT_DURATION_MS 5000
 #define SLEEP_DELAY_MS 1000
+#define HIGH_VOLT 3.3
+#define ANALOG_READ_RANGE 1023 // 20-bit ((2**10)-1)
 
 // DEFINE ALL VARIABLES
 // volatile keywork used to insure integrity of value when manipulated by an ISR
 volatile bool illuminate_led = 0;  // 0 = LOW = False (vs. 1 = HIGH = TRUE)
 volatile unsigned long illuminate_on_time_ms = 0;
 unsigned long current_time_ms = 0;
+int astable_pot_voltage_raw;
+int astable_pot_voltage;
+int led_blink_delay_ms;
 
 // DECLARE ALL FUNCTION (not main)
 void do_this_after_button_press(void);
@@ -37,12 +42,19 @@ void setup() {
 // loop continuously runs after setup until to break/stop it
 void loop() {
     if (illuminate_led) {
+        astable_pot_voltage_raw= analogRead(ASTABLE_POT_PIN);
+        Serial.println("Astable pot voltage:");
+        Serial.println(astable_pot_voltage_raw);
+        astable_pot_voltage = (float)astable_pot_voltage_raw*HIGH_VOLT/ANALOG_READ_RANGE;  // fix this logic
+        led_blink_delay_ms = 250;  // FIX THIS CALCULATION!!
+        Serial.println("Set astable LED blink delay to:");
+        Serial.println(led_blink_delay_ms);
         digitalWrite(LED_PIN, HIGH);
         // DELAYS ARE NOT THE IDEAL WAY TO DO THIS; USE TIMERS!
         // THIS MAKES MARK SAD :(
-        delay(LED_BLINK_DELAY_MS);
+        delay(led_blink_delay_ms);
         digitalWrite(LED_PIN, LOW);
-        delay(LED_BLINK_DELAY_MS);
+        delay(led_blink_delay_ms);
         current_time_ms = millis();
         
         // this one-shot implementation stinks; has a jitter of
