@@ -2,6 +2,14 @@
 
 Arduino-based firmware developed in the PlatformIO development environment.
 
+## Firmware Notes
+Fireware is written to work with the Arduino Nano Every, but can be adapted to
+the Nano 33 BLE.
+## Circuit
+KiCad project is under `circuit/`.
+
+![schematic.png](schematic.png)
+
 ## Troubleshooting
 ```
 avrdude: ser_open(): can't open device "/dev/ttyACM0": Permission denied
