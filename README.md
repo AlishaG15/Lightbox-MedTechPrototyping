@@ -8,7 +8,7 @@ the Nano 33 BLE.
 ## Circuit
 KiCad project is under `circuit/`.
 
-![schematic.png](schematic.png)
+![schematic.png](circuit/schematic.png)
 
 ## Troubleshooting
 ```
