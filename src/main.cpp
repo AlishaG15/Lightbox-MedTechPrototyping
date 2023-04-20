@@ -60,16 +60,18 @@ void loop() {
         Serial.println("Astable pot voltage:");
         Serial.println(astable_pot_voltage_raw);
         // astable_pot_voltage = (float)astable_pot_voltage_raw*HIGH_VOLT/ANALOG_READ_RANGE;  // converting to absolute voltage is not actually necessary
-        led_blink_delay_ms = XXX;  // TODO: calculate this delay based on the read [raw] analog value (percentage)
+        led_blink_delay_ms = 1/(ASTABLE_MIN_BLINK_RATE_HZ + (ASTABLE_MAX_BLINK_RATE_HZ-ASTABLE_MIN_BLINK_RATE_HZ)*astable_pot_voltage_raw/ANALOG_READ_RANGE);  // TODO: calculate this delay based on the read [raw] analog value (percentage)
         led_on_duration_ms = XXX;  // TODO: calculate this on-time duration based on the read [raw] analog value (percentage)
         Serial.println("Set astable LED blink delay to:");
         Serial.println(led_blink_delay_ms);
         // TODO: add code for the inverted LED output
         digitalWrite(LED_PIN, HIGH);
+        digitalWrite(INV_LED_PIN, LOW);
         // DELAYS ARE NOT THE IDEAL WAY TO DO THIS; USE TIMERS!
         // THIS MAKES MARK SAD :(
         delay(led_blink_delay_ms);
         digitalWrite(LED_PIN, LOW);
+        digitalWrite(INV_LED_PIN, HIGH);
         delay(led_blink_delay_ms);
         current_time_ms = millis();
         
@@ -84,6 +86,7 @@ void loop() {
     else
     {
         digitalWrite(LED_PIN, 0);
+        digitalWrite(INV_LED_PIN, 0);
         Serial.println("Bored; nothing to do... going to sleep.");
         sleep_enable();  // dependent on avr/sleep.h
         set_sleep_mode(SLEEP_MODE_PWR_DOWN); // dependent on avr/sleep.h
