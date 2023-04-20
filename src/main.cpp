@@ -58,7 +58,7 @@ void loop() {
         Serial.println("Astable pot voltage:");
         Serial.println(astable_pot_voltage_raw);
         // astable_pot_voltage = (float)astable_pot_voltage_raw*HIGH_VOLT/ANALOG_READ_RANGE;  // converting to absolute voltage is not actually necessary
-        led_blink_delay_ms = XXX;  // TODO: calculate this delay based on the read [raw] analog value (percentage)
+        led_blink_delay_ms = ASTABLE_MIN_BLINK_RATE_HZ + (ASTABLE_MAX_BLINK_RATE_HZ-ASTABLE_MIN_BLINK_RATE_HZ)*astable_pot_voltage_raw/ANALOG_READ_RANGE;  // TODO: calculate this delay based on the read [raw] analog value (percentage)
         led_on_duration_ms = XXX;  // TODO: calculate this on-time duration based on the read [raw] analog value (percentage)
         Serial.println("Set astable LED blink delay to:");
         Serial.println(led_blink_delay_ms);
