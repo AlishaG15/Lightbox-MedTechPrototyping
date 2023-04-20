@@ -8,7 +8,7 @@
 // All device specification-related values should be defined here, *not* in the downstream code!  You should
 // not have to search the code for where values are defined / used.
 #define LED_PIN 13  // D13
-#define INV_LED_PIN 10 // D10
+#define INV_LED_PIN 8 // D8
 #define BUTTON_INTERRUPT_PIN 2 // D2
 #define ASTABLE_POT_PIN A0
 #define MONOSTABLE_POT_PIN A1
