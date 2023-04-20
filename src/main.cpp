@@ -20,6 +20,7 @@
 #define MONOSTABLE_MIN_DURATION_MS 3000
 #define MONOSTABLE_MAX_DURATION_MS 10000
 
+
 // DEFINE ALL VARIABLES
 // volatile keywork used to insure integrity of value when manipulated by an ISR
 volatile bool illuminate_led = 0;  // 0 = LOW = False (vs. 1 = HIGH = TRUE)
@@ -50,6 +51,7 @@ void setup() {
     Serial.begin(9600);
 }
 
+//hi
 // loop continuously runs after setup until to break/stop it
 void loop() {
     if (illuminate_led) {
