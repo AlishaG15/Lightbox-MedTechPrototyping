@@ -2,6 +2,8 @@
 
 Arduino-based firmware developed in the PlatformIO development environment.
 
+# DMITRI IS MEAN
+
 ## Firmware Notes
 Fireware is written to work with the Arduino Nano Every, but can be adapted to
 the Nano 33 BLE.
