@@ -1,6 +1,6 @@
 // LOAD ALL LIBRARIES FIRST
 #include <Arduino.h>
-#include <avr/sleep.h>  // only works for the AVR-based boards; not the Nano 33 BLE
+//#include <avr/sleep.h>  // only works for the AVR-based boards; not the Nano 33 BLE
 
 // DEFINE ALL PREPROCESSOR MACROS
 // see pinout in datasheet to know what pins are where / do what
@@ -12,7 +12,7 @@
 #define BUTTON_INTERRUPT_PIN 2 // D2
 #define ASTABLE_POT_PIN A0
 #define MONOSTABLE_POT_PIN A1
-#define SLEEP_DELAY_MS 1000
+#define SLEEP_DELAY_MS 500
 #define HIGH_VOLT 3.3 // microcontroller-specific logic voltage value
 #define ANALOG_READ_RANGE 1023 // 10-bit ((2**10)-1); 10-bit is specific to your microcontroller (see datasheet)
 #define ASTABLE_MIN_BLINK_RATE_HZ 5
@@ -29,8 +29,9 @@ unsigned long current_time_ms = 0;
 int astable_pot_voltage_raw;
 int monostable_pot_voltage_raw;
 // int astable_pot_voltage;
-int led_blink_delay_ms;
-int led_on_duration_ms;
+unsigned long led_blink_delay_ms;
+unsigned long led_on_duration_ms;
+bool read_illumination_state = 1;  // read analog voltages after button press to set blink rate and on time
 
 // DECLARE ALL FUNCTION (not main)
 void do_this_after_button_press(void);
@@ -49,27 +50,45 @@ void setup() {
     // 9600 is the baud rate (rate of data communication, 9600 bits/s)
     // set increments; slower is more reliable
     Serial.begin(9600);
+    Serial.println("LOG: Device initialized.");
 }
 
-//hi
 // loop continuously runs after setup until to break/stop it
 void loop() {
     if (illuminate_led) {
-        astable_pot_voltage_raw= analogRead(ASTABLE_POT_PIN);
-        monostable_pot_voltage_raw = analogRead(MONOSTABLE_POT_PIN);
-        Serial.println("Astable pot voltage:");
-        Serial.println(astable_pot_voltage_raw);
-        // astable_pot_voltage = (float)astable_pot_voltage_raw*HIGH_VOLT/ANALOG_READ_RANGE;  // converting to absolute voltage is not actually necessary
-        led_blink_delay_ms = 1/(ASTABLE_MIN_BLINK_RATE_HZ + (ASTABLE_MAX_BLINK_RATE_HZ-ASTABLE_MIN_BLINK_RATE_HZ)*astable_pot_voltage_raw/ANALOG_READ_RANGE);  // TODO: calculate this delay based on the read [raw] analog value (percentage)
-        led_on_duration_ms = XXX;  // TODO: calculate this on-time duration based on the read [raw] analog value (percentage)
-        Serial.println("Set astable LED blink delay to:");
-        Serial.println(led_blink_delay_ms);
-        // TODO: add code for the inverted LED output
+        if (read_illumination_state) {
+            illuminate_on_time_ms = millis();
+            Serial.println("Button press detected at time (ms):");
+            Serial.println(illuminate_on_time_ms);
+
+            /* Read the astable potentiometer voltage */
+            astable_pot_voltage_raw= analogRead(ASTABLE_POT_PIN);
+            Serial.println("DBG: Astable pot voltage:");
+            Serial.println(astable_pot_voltage_raw);
+
+            /* Calculate the blink delay */
+            // astable_pot_voltage = (float)astable_pot_voltage_raw*HIGH_VOLT/ANALOG_READ_RANGE;  // converting to absolute voltage is not actually necessary
+            led_blink_delay_ms = 1000/(ASTABLE_MIN_BLINK_RATE_HZ + (ASTABLE_MAX_BLINK_RATE_HZ-ASTABLE_MIN_BLINK_RATE_HZ)*astable_pot_voltage_raw/ANALOG_READ_RANGE);
+            Serial.println("DBG: Set astable LED blink delay to (ms):");
+            Serial.println(led_blink_delay_ms);
+
+            /* Read the astable potentiometer voltage */
+            monostable_pot_voltage_raw = analogRead(MONOSTABLE_POT_PIN);
+            Serial.println("DBG: Monostable pot voltage:");
+            Serial.println(monostable_pot_voltage_raw);
+
+            /* Calculate the on-time */
+            led_on_duration_ms = MONOSTABLE_MIN_DURATION_MS + (MONOSTABLE_MAX_DURATION_MS-MONOSTABLE_MIN_DURATION_MS)*monostable_pot_voltage_raw/ANALOG_READ_RANGE;
+            Serial.println("DBG: Set monostable LED on time to (ms):");
+            Serial.println(led_on_duration_ms);
+        
+            read_illumination_state = 0;  // turn OFF to only read this voltages once per button press
+        }
+
+        /* Toggle the LEDs */
         digitalWrite(LED_PIN, HIGH);
         digitalWrite(INV_LED_PIN, LOW);
-        // DELAYS ARE NOT THE IDEAL WAY TO DO THIS; USE TIMERS!
-        // THIS MAKES MARK SAD :(
-        delay(led_blink_delay_ms);
+        delay(led_blink_delay_ms); // DELAYS ARE NOT THE IDEAL WAY TO DO THIS; WOULD PREFER TIMERS!
         digitalWrite(LED_PIN, LOW);
         digitalWrite(INV_LED_PIN, HIGH);
         delay(led_blink_delay_ms);
@@ -79,6 +98,7 @@ void loop() {
         // LED_BLINK_DELAY_MS x 2; again, use a timer
         if ((current_time_ms - illuminate_on_time_ms) > led_on_duration_ms) {
             illuminate_led = 0;
+            read_illumination_state = 1;
             Serial.println("One shot duration exceeded at:");
             Serial.println(current_time_ms);
         }
@@ -88,10 +108,10 @@ void loop() {
         digitalWrite(LED_PIN, 0);
         digitalWrite(INV_LED_PIN, 0);
         Serial.println("Bored; nothing to do... going to sleep.");
-        sleep_enable();  // dependent on avr/sleep.h
-        set_sleep_mode(SLEEP_MODE_PWR_DOWN); // dependent on avr/sleep.h
+        //sleep_enable();  // dependent on avr/sleep.h
+        //set_sleep_mode(SLEEP_MODE_PWR_DOWN); // dependent on avr/sleep.h
         delay(SLEEP_DELAY_MS);  // delay a bit to make sure chip has everything done before sleeping
-        sleep_cpu(); // dependent on avr/sleep.h
+        //sleep_cpu(); // dependent on avr/sleep.h
     }
     
 }
@@ -103,8 +123,4 @@ Code in this ISR must consume minimal resources and run quickly.
 */
 void do_this_after_button_press() {
     illuminate_led = 1;
-    illuminate_on_time_ms = millis();
-    // in general, avoid prints commands in ISRs... can be blocking
-    Serial.println("Button press detected at time:");
-    Serial.println(illuminate_on_time_ms);
 }
