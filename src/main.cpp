@@ -8,7 +8,7 @@
 // All device specification-related values should be defined here, *not* in the downstream code!  You should
 // not have to search the code for where values are defined / used.
 #define LED_PIN 13  // D13
-#define INV_LED_PIN 8 // D8
+#define INV_LED_PIN 10 // D10
 #define BUTTON_INTERRUPT_PIN 2 // D2
 #define ASTABLE_POT_PIN A0
 #define MONOSTABLE_POT_PIN A1
@@ -68,7 +68,7 @@ void loop() {
 
             /* Calculate the blink delay */
             // astable_pot_voltage = (float)astable_pot_voltage_raw*HIGH_VOLT/ANALOG_READ_RANGE;  // converting to absolute voltage is not actually necessary
-            led_blink_delay_ms = 1000/(ASTABLE_MIN_BLINK_RATE_HZ + (ASTABLE_MAX_BLINK_RATE_HZ-ASTABLE_MIN_BLINK_RATE_HZ)*astable_pot_voltage_raw/ANALOG_READ_RANGE);
+            led_blink_delay_ms = 1000/(ASTABLE_MIN_BLINK_RATE_HZ + (ASTABLE_MAX_BLINK_RATE_HZ-ASTABLE_MIN_BLINK_RATE_HZ)*(float)astable_pot_voltage_raw/ANALOG_READ_RANGE);
             Serial.println("DBG: Set astable LED blink delay to (ms):");
             Serial.println(led_blink_delay_ms);
 
@@ -78,7 +78,7 @@ void loop() {
             Serial.println(monostable_pot_voltage_raw);
 
             /* Calculate the on-time */
-            led_on_duration_ms = MONOSTABLE_MIN_DURATION_MS + (MONOSTABLE_MAX_DURATION_MS-MONOSTABLE_MIN_DURATION_MS)*monostable_pot_voltage_raw/ANALOG_READ_RANGE;
+            led_on_duration_ms = MONOSTABLE_MIN_DURATION_MS + (MONOSTABLE_MAX_DURATION_MS-MONOSTABLE_MIN_DURATION_MS)*(float)monostable_pot_voltage_raw/ANALOG_READ_RANGE;
             Serial.println("DBG: Set monostable LED on time to (ms):");
             Serial.println(led_on_duration_ms);
         
