@@ -9,7 +9,7 @@ the Nano 33 BLE.
 KiCad project is under `circuit/`.
 
 ![schematic.png](circuit/schematic.png)
-![pinout](arduino_nano_every_pintout.png)
+![arduino_nano_every_pinout.png](arduino_nano_every_pintout.png)
 
 ## Troubleshooting
 ```
