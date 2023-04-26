@@ -17,6 +17,7 @@
 #define ANALOG_READ_RANGE 1023 // 10-bit ((2**10)-1); 10-bit is specific to your microcontroller (see datasheet)
 #define ASTABLE_MIN_BLINK_RATE_HZ 5
 #define ASTABLE_MAX_BLINK_RATE_HZ 10
+#define ASTABLE_DUTY_CYCLE 0.5
 #define MONOSTABLE_MIN_DURATION_MS 3000
 #define MONOSTABLE_MAX_DURATION_MS 10000
 
@@ -85,10 +86,13 @@ void loop() {
             read_illumination_state = 0;  // turn OFF to only read this voltages once per button press
         }
 
+        // TODO: SET DUTY CYCLE
+        // TODO: USE MILLIS TIMER INSTEAD OF DELAY STATEMENTS
         /* Toggle the LEDs */
         digitalWrite(LED_PIN, HIGH);
         digitalWrite(INV_LED_PIN, LOW);
-        delay(led_blink_delay_ms); // DELAYS ARE NOT THE IDEAL WAY TO DO THIS; WOULD PREFER TIMERS!
+        // DELAYS ARE NOT THE IDEAL WAY TO DO THIS; WOULD PREFER TIMERS!
+        delay(led_blink_delay_ms); 
         digitalWrite(LED_PIN, LOW);
         digitalWrite(INV_LED_PIN, HIGH);
         delay(led_blink_delay_ms);
