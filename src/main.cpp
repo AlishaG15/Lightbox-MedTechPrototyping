@@ -1,6 +1,6 @@
 // LOAD ALL LIBRARIES FIRST
 #include <Arduino.h>
-//#include <avr/sleep.h>  // only works for the AVR-based boards; not the Nano 33 BLE
+#include <avr/sleep.h>  /
 
 // DEFINE ALL PREPROCESSOR MACROS
 // see pinout in datasheet to know what pins are where / do what
@@ -12,8 +12,7 @@
 #define BUTTON_INTERRUPT_PIN 2 // D2
 #define ASTABLE_POT_PIN A0
 #define MONOSTABLE_POT_PIN A1
-#define SLEEP_DELAY_MS 500
-#define HIGH_VOLT 3.3 // microcontroller-specific logic voltage value
+#define SLEEP_DELAY_MS 250
 #define ANALOG_READ_RANGE 1023 // 10-bit ((2**10)-1); 10-bit is specific to your microcontroller (see datasheet)
 #define ASTABLE_MIN_BLINK_RATE_HZ 5
 #define ASTABLE_MAX_BLINK_RATE_HZ 10
@@ -36,6 +35,8 @@ bool read_illumination_state = 1;  // read analog voltages after button press to
 
 // DECLARE ALL FUNCTION (not main)
 void do_this_after_button_press(void);
+void read_astable_voltage(void);
+void read_monostable_voltage(void);
 
 // setup is run once when the device is powered on
 void setup() {
@@ -55,6 +56,7 @@ void setup() {
 }
 
 // loop continuously runs after setup until to break/stop it
+// note that the loop reads like an "action script"
 void loop() {
     if (illuminate_led) {
         if (read_illumination_state) {
@@ -62,21 +64,16 @@ void loop() {
             Serial.println("Button press detected at time (ms):");
             Serial.println(illuminate_on_time_ms);
 
-            /* Read the astable potentiometer voltage */
-            astable_pot_voltage_raw= analogRead(ASTABLE_POT_PIN);
-            Serial.println("DBG: Astable pot voltage:");
-            Serial.println(astable_pot_voltage_raw);
+            read_astable_voltage();
 
             /* Calculate the blink delay */
-            // astable_pot_voltage = (float)astable_pot_voltage_raw*HIGH_VOLT/ANALOG_READ_RANGE;  // converting to absolute voltage is not actually necessary
             led_blink_delay_ms = 1000/(ASTABLE_MIN_BLINK_RATE_HZ + (ASTABLE_MAX_BLINK_RATE_HZ-ASTABLE_MIN_BLINK_RATE_HZ)*(float)astable_pot_voltage_raw/ANALOG_READ_RANGE);
             Serial.println("DBG: Set astable LED blink delay to (ms):");
             Serial.println(led_blink_delay_ms);
+            Serial.println("DBG: Set astable LED blink rate (Hz):");
+            Serial.println(1000/(float)led_blink_delay_ms);
 
-            /* Read the astable potentiometer voltage */
-            monostable_pot_voltage_raw = analogRead(MONOSTABLE_POT_PIN);
-            Serial.println("DBG: Monostable pot voltage:");
-            Serial.println(monostable_pot_voltage_raw);
+            read_monostable_voltage();
 
             /* Calculate the on-time */
             led_on_duration_ms = MONOSTABLE_MIN_DURATION_MS + (MONOSTABLE_MAX_DURATION_MS-MONOSTABLE_MIN_DURATION_MS)*(float)monostable_pot_voltage_raw/ANALOG_READ_RANGE;
@@ -112,10 +109,10 @@ void loop() {
         digitalWrite(LED_PIN, 0);
         digitalWrite(INV_LED_PIN, 0);
         Serial.println("Bored; nothing to do... going to sleep.");
-        //sleep_enable();  // dependent on avr/sleep.h
-        //set_sleep_mode(SLEEP_MODE_PWR_DOWN); // dependent on avr/sleep.h
+        sleep_enable();  // dependent on avr/sleep.h
+        set_sleep_mode(SLEEP_MODE_PWR_DOWN); // dependent on avr/sleep.h
         delay(SLEEP_DELAY_MS);  // delay a bit to make sure chip has everything done before sleeping
-        //sleep_cpu(); // dependent on avr/sleep.h
+        sleep_cpu(); // dependent on avr/sleep.h
     }
     
 }
@@ -127,4 +124,18 @@ Code in this ISR must consume minimal resources and run quickly.
 */
 void do_this_after_button_press() {
     illuminate_led = 1;
+}
+
+void read_astable_voltage() {
+    /* Read the astable potentiometer voltage */
+    astable_pot_voltage_raw= analogRead(ASTABLE_POT_PIN);
+    Serial.println("DBG: Astable pot voltage:");
+    Serial.println(astable_pot_voltage_raw);
+}
+
+void read_monostable_voltage() {
+    /* Read the astable potentiometer voltage */
+    monostable_pot_voltage_raw = analogRead(MONOSTABLE_POT_PIN);
+    Serial.println("DBG: Monostable pot voltage:");
+    Serial.println(monostable_pot_voltage_raw);
 }
