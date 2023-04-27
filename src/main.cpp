@@ -20,18 +20,21 @@
 #define MONOSTABLE_MIN_DURATION_MS 3000
 #define MONOSTABLE_MAX_DURATION_MS 10000
 
-
 // DEFINE ALL VARIABLES
 // volatile keywork used to insure integrity of value when manipulated by an ISR
 volatile bool illuminate_led = 0;  // 0 = LOW = False (vs. 1 = HIGH = TRUE)
-volatile unsigned long illuminate_on_time_ms = 0;
-unsigned long current_time_ms = 0;
+bool read_illumination_state = 1;  // read analog voltages after button press to set blink rate and on time
+volatile unsigned long led_on_time_start_ms = 0;
+unsigned long last_toggle_time_ms = 0;
 int astable_pot_voltage_raw;
 int monostable_pot_voltage_raw;
 // int astable_pot_voltage;
 unsigned long led_blink_period_ms;
 unsigned long led_on_duration_ms;
-bool read_illumination_state = 1;  // read analog voltages after button press to set blink rate and on time
+unsigned long on_time_period_ms;
+unsigned long off_time_period_ms;
+unsigned long next_on_toggle_time_ms;
+unsigned long next_off_toggle_time_ms;
 
 // DECLARE ALL FUNCTIONS (excluding loop() and setup())
 void do_this_after_button_press(void);
@@ -39,6 +42,7 @@ void read_astable_voltage(void);
 void read_monostable_voltage(void);
 void calc_blink_period(void);
 void calc_on_time(void);
+void calc_on_off_periods();
 void toggle_leds(void);
 void go_to_sleep(void);
 
@@ -64,9 +68,10 @@ void setup() {
 void loop() {
     if (illuminate_led) {
         if (read_illumination_state) {
-            illuminate_on_time_ms = millis();
+            led_on_time_start_ms = millis();
+            last_toggle_time_ms = led_on_time_start_ms;
             Serial.print("INF: Button press detected at time: ");
-            Serial.print(illuminate_on_time_ms);
+            Serial.print(led_on_time_start_ms);
             Serial.print(" ms\n");
 
             read_astable_voltage();
@@ -76,19 +81,17 @@ void loop() {
             calc_on_time();
         
             read_illumination_state = 0;  // turn OFF to only read these voltages once per button press
+        
+            calc_on_off_periods();
         }
 
         toggle_leds();
 
-        current_time_ms = millis();
-        
-        // this one-shot implementation stinks; has a jitter of
-        // LED_BLINK_DELAY_MS x 2; again, use a timer
-        if ((current_time_ms - illuminate_on_time_ms) > led_on_duration_ms) {
+        if ((last_toggle_time_ms - led_on_time_start_ms) > led_on_duration_ms) {
             illuminate_led = 0;
             read_illumination_state = 1;
             Serial.print("DBG: One shot duration exceeded at: ");
-            Serial.print(current_time_ms);
+            Serial.print(millis());
             Serial.print(" ms\n");
         }
     }
@@ -99,12 +102,12 @@ void loop() {
     
 }
 
-/* Interupt Service Routine (ISR)
-
-Code in this ISR must consume minimal resources and run quickly.
-
-*/
 void do_this_after_button_press() {
+    /* Interupt Service Routine (ISR)
+
+    Code in this ISR must consume minimal resources and run quickly.
+
+    */
     illuminate_led = 1;
 }
 
@@ -174,12 +177,48 @@ void toggle_leds() {
     Delays are "blocking" and stall the device from responding to other events.
 
     TODO: SET DUTY CYCLE
-    TODO: USE MILLIS TIMER INSTEAD OF DELAY STATEMENTS
     */
-    digitalWrite(LED_PIN, HIGH);
-    digitalWrite(INV_LED_PIN, LOW);
-    delay((int)((float)led_blink_period_ms/2));
-    digitalWrite(LED_PIN, LOW);
-    digitalWrite(INV_LED_PIN, HIGH);
-    delay((int)((float)led_blink_period_ms/2));
+
+    unsigned long current_time_ms;
+    current_time_ms = millis();    
+
+    if ((current_time_ms > next_on_toggle_time_ms) && (current_time_ms < next_off_toggle_time_ms)) 
+    {
+        digitalWrite(LED_PIN, HIGH);
+        digitalWrite(INV_LED_PIN, LOW);
+    }
+    else if (current_time_ms > next_off_toggle_time_ms)
+    {
+        digitalWrite(LED_PIN, LOW);
+        digitalWrite(INV_LED_PIN, HIGH);
+    }
+    
+    last_toggle_time_ms = millis();
+    next_on_toggle_time_ms = last_toggle_time_ms + on_time_period_ms;
+    next_off_toggle_time_ms = next_on_toggle_time_ms = off_time_period_ms;
+}
+
+
+void calc_on_off_periods() {
+    /* Calculate LED on/off periods based on blink rate and duty cycle.
+    
+    Reads:
+        ASTABLE_DUTY_CYCLE
+        led_blink_period_ms (unsigned long)
+
+    Writes:
+        on_time_period_ms (unsigned long)
+        off_time_period_ms (unsigned long)
+    
+    */
+
+    on_time_period_ms = (float)led_blink_period_ms*ASTABLE_DUTY_CYCLE;
+    Serial.print("DBG: On-time period: ");
+    Serial.print(on_time_period_ms);
+    Serial.print(" ms\n");
+
+    off_time_period_ms = (float)led_blink_period_ms*(1-ASTABLE_DUTY_CYCLE);
+    Serial.print("DBG: Off-time period: ");
+    Serial.print(off_time_period_ms);
+    Serial.print(" ms\n");
 }
