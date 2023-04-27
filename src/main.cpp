@@ -29,14 +29,18 @@ unsigned long current_time_ms = 0;
 int astable_pot_voltage_raw;
 int monostable_pot_voltage_raw;
 // int astable_pot_voltage;
-unsigned long led_blink_delay_ms;
+unsigned long led_blink_period_ms;
 unsigned long led_on_duration_ms;
 bool read_illumination_state = 1;  // read analog voltages after button press to set blink rate and on time
 
-// DECLARE ALL FUNCTION (not main)
+// DECLARE ALL FUNCTIONS (excluding loop() and setup())
 void do_this_after_button_press(void);
 void read_astable_voltage(void);
 void read_monostable_voltage(void);
+void calc_blink_period(void);
+void calc_on_time(void);
+void toggle_leds(void);
+void go_to_sleep(void);
 
 // setup is run once when the device is powered on
 void setup() {
@@ -65,34 +69,16 @@ void loop() {
             Serial.println(illuminate_on_time_ms);
 
             read_astable_voltage();
-
-            /* Calculate the blink delay */
-            led_blink_delay_ms = 1000/(ASTABLE_MIN_BLINK_RATE_HZ + (ASTABLE_MAX_BLINK_RATE_HZ-ASTABLE_MIN_BLINK_RATE_HZ)*(float)astable_pot_voltage_raw/ANALOG_READ_RANGE);
-            Serial.println("DBG: Set astable LED blink delay to (ms):");
-            Serial.println(led_blink_delay_ms);
-            Serial.println("DBG: Set astable LED blink rate (Hz):");
-            Serial.println(1000/(float)led_blink_delay_ms);
+            calc_blink_period();
 
             read_monostable_voltage();
-
-            /* Calculate the on-time */
-            led_on_duration_ms = MONOSTABLE_MIN_DURATION_MS + (MONOSTABLE_MAX_DURATION_MS-MONOSTABLE_MIN_DURATION_MS)*(float)monostable_pot_voltage_raw/ANALOG_READ_RANGE;
-            Serial.println("DBG: Set monostable LED on time to (ms):");
-            Serial.println(led_on_duration_ms);
+            calc_on_time();
         
-            read_illumination_state = 0;  // turn OFF to only read this voltages once per button press
+            read_illumination_state = 0;  // turn OFF to only read these voltages once per button press
         }
 
-        // TODO: SET DUTY CYCLE
-        // TODO: USE MILLIS TIMER INSTEAD OF DELAY STATEMENTS
-        /* Toggle the LEDs */
-        digitalWrite(LED_PIN, HIGH);
-        digitalWrite(INV_LED_PIN, LOW);
-        // DELAYS ARE NOT THE IDEAL WAY TO DO THIS; WOULD PREFER TIMERS!
-        delay(led_blink_delay_ms); 
-        digitalWrite(LED_PIN, LOW);
-        digitalWrite(INV_LED_PIN, HIGH);
-        delay(led_blink_delay_ms);
+        toggle_leds();
+
         current_time_ms = millis();
         
         // this one-shot implementation stinks; has a jitter of
@@ -100,19 +86,13 @@ void loop() {
         if ((current_time_ms - illuminate_on_time_ms) > led_on_duration_ms) {
             illuminate_led = 0;
             read_illumination_state = 1;
-            Serial.println("One shot duration exceeded at:");
+            Serial.println("DBG: One shot duration exceeded at:");
             Serial.println(current_time_ms);
         }
     }
     else
     {
-        digitalWrite(LED_PIN, 0);
-        digitalWrite(INV_LED_PIN, 0);
-        Serial.println("Bored; nothing to do... going to sleep.");
-        sleep_enable();  // dependent on avr/sleep.h
-        set_sleep_mode(SLEEP_MODE_PWR_DOWN); // dependent on avr/sleep.h
-        delay(SLEEP_DELAY_MS);  // delay a bit to make sure chip has everything done before sleeping
-        sleep_cpu(); // dependent on avr/sleep.h
+        go_to_sleep();
     }
     
 }
@@ -138,4 +118,64 @@ void read_monostable_voltage() {
     monostable_pot_voltage_raw = analogRead(MONOSTABLE_POT_PIN);
     Serial.println("DBG: Monostable pot voltage:");
     Serial.println(monostable_pot_voltage_raw);
+}
+    
+void calc_blink_period() {
+    /* Calculate the blink period 
+
+    Reads:
+        astable_pot_voltage_raw (int)
+
+    Writes:
+        led_blink_period_ms (int)
+    
+    */
+    led_blink_period_ms = 1000/(ASTABLE_MIN_BLINK_RATE_HZ + (ASTABLE_MAX_BLINK_RATE_HZ-ASTABLE_MIN_BLINK_RATE_HZ)*(float)astable_pot_voltage_raw/ANALOG_READ_RANGE);
+    Serial.println("DBG: Set astable LED blink delay to (ms):");
+    Serial.println(led_blink_period_ms);
+    Serial.println("DBG: Set astable LED blink rate (Hz):");
+    Serial.println(1000/(float)led_blink_period_ms);
+}
+
+void calc_on_time() {
+    /* Calculate the on-time 
+    
+    Reads: 
+        monostable_pot_voltage_raw (int)
+    
+    Writes:
+        led_on_duration_ms (int)
+    
+    */
+    
+    led_on_duration_ms = MONOSTABLE_MIN_DURATION_MS + (MONOSTABLE_MAX_DURATION_MS-MONOSTABLE_MIN_DURATION_MS)*(float)monostable_pot_voltage_raw/ANALOG_READ_RANGE;
+    Serial.println("DBG: Set monostable LED on time to (ms):");
+    Serial.println(led_on_duration_ms);
+}
+
+void go_to_sleep() {
+    digitalWrite(LED_PIN, 0);
+    digitalWrite(INV_LED_PIN, 0);
+    Serial.println("Bored; nothing to do... going to sleep.");
+    sleep_enable();  // dependent on avr/sleep.h
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN); // dependent on avr/sleep.h
+    delay(SLEEP_DELAY_MS);  // delay a bit to make sure chip has everything done before sleeping
+    sleep_cpu(); // dependent on avr/sleep.h
+}
+
+void toggle_leds() {
+    /* Toggle LED on/off state based on duty cycle and blink rate
+
+    You may be tempted to use delay() statements; resist that temptation.
+    Delays are "blocking" and stall the device from responding to other events.
+
+    TODO: SET DUTY CYCLE
+    TODO: USE MILLIS TIMER INSTEAD OF DELAY STATEMENTS
+    */
+    digitalWrite(LED_PIN, HIGH);
+    digitalWrite(INV_LED_PIN, LOW);
+    delay((int)((float)led_blink_period_ms/2));
+    digitalWrite(LED_PIN, LOW);
+    digitalWrite(INV_LED_PIN, HIGH);
+    delay((int)((float)led_blink_period_ms/2));
 }
