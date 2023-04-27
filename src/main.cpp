@@ -56,7 +56,7 @@ void setup() {
     // 9600 is the baud rate (rate of data communication, 9600 bits/s)
     // set increments; slower is more reliable
     Serial.begin(9600);
-    Serial.println("LOG: Device initialized.");
+    Serial.println("INF: Device initialized.");
 }
 
 // loop continuously runs after setup until to break/stop it
@@ -65,8 +65,9 @@ void loop() {
     if (illuminate_led) {
         if (read_illumination_state) {
             illuminate_on_time_ms = millis();
-            Serial.println("Button press detected at time (ms):");
-            Serial.println(illuminate_on_time_ms);
+            Serial.print("INF: Button press detected at time: ");
+            Serial.print(illuminate_on_time_ms);
+            Serial.print(" ms\n");
 
             read_astable_voltage();
             calc_blink_period();
@@ -86,8 +87,9 @@ void loop() {
         if ((current_time_ms - illuminate_on_time_ms) > led_on_duration_ms) {
             illuminate_led = 0;
             read_illumination_state = 1;
-            Serial.println("DBG: One shot duration exceeded at:");
-            Serial.println(current_time_ms);
+            Serial.print("DBG: One shot duration exceeded at: ");
+            Serial.print(current_time_ms);
+            Serial.print(" ms\n");
         }
     }
     else
@@ -109,14 +111,14 @@ void do_this_after_button_press() {
 void read_astable_voltage() {
     /* Read the astable potentiometer voltage */
     astable_pot_voltage_raw= analogRead(ASTABLE_POT_PIN);
-    Serial.println("DBG: Astable pot voltage:");
+    Serial.print("DBG: Astable pot voltage: ");
     Serial.println(astable_pot_voltage_raw);
 }
 
 void read_monostable_voltage() {
     /* Read the astable potentiometer voltage */
     monostable_pot_voltage_raw = analogRead(MONOSTABLE_POT_PIN);
-    Serial.println("DBG: Monostable pot voltage:");
+    Serial.print("DBG: Monostable pot voltage: ");
     Serial.println(monostable_pot_voltage_raw);
 }
     
@@ -131,10 +133,11 @@ void calc_blink_period() {
     
     */
     led_blink_period_ms = 1000/(ASTABLE_MIN_BLINK_RATE_HZ + (ASTABLE_MAX_BLINK_RATE_HZ-ASTABLE_MIN_BLINK_RATE_HZ)*(float)astable_pot_voltage_raw/ANALOG_READ_RANGE);
-    Serial.println("DBG: Set astable LED blink delay to (ms):");
-    Serial.println(led_blink_period_ms);
-    Serial.println("DBG: Set astable LED blink rate (Hz):");
-    Serial.println(1000/(float)led_blink_period_ms);
+    Serial.print("INF: Astable LED blink delay set to: ");
+    Serial.print(led_blink_period_ms);
+    Serial.print(" ms (");
+    Serial.print(1000/(float)led_blink_period_ms);
+    Serial.print(" Hz)\n");
 }
 
 void calc_on_time() {
@@ -149,14 +152,15 @@ void calc_on_time() {
     */
     
     led_on_duration_ms = MONOSTABLE_MIN_DURATION_MS + (MONOSTABLE_MAX_DURATION_MS-MONOSTABLE_MIN_DURATION_MS)*(float)monostable_pot_voltage_raw/ANALOG_READ_RANGE;
-    Serial.println("DBG: Set monostable LED on time to (ms):");
-    Serial.println(led_on_duration_ms);
+    Serial.print("INF: Monostable LED on time set to: ");
+    Serial.print(led_on_duration_ms);
+    Serial.print(" ms\n");
 }
 
 void go_to_sleep() {
     digitalWrite(LED_PIN, 0);
     digitalWrite(INV_LED_PIN, 0);
-    Serial.println("Bored; nothing to do... going to sleep.");
+    Serial.println("INF: Bored; nothing to do... going to sleep.");
     sleep_enable();  // dependent on avr/sleep.h
     set_sleep_mode(SLEEP_MODE_PWR_DOWN); // dependent on avr/sleep.h
     delay(SLEEP_DELAY_MS);  // delay a bit to make sure chip has everything done before sleeping
