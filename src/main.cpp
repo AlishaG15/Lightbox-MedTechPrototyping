@@ -17,8 +17,8 @@
 #define ASTABLE_MIN_BLINK_RATE_HZ 5
 #define ASTABLE_MAX_BLINK_RATE_HZ 10
 #define ASTABLE_DUTY_CYCLE 0.5
-#define MONOSTABLE_MIN_DURATION_MS 3000
-#define MONOSTABLE_MAX_DURATION_MS 10000
+#define MONOSTABLE_MIN_DURATION_MS 1000
+#define MONOSTABLE_MAX_DURATION_MS 2000
 
 // DEFINE ALL VARIABLES
 // volatile keywork used to insure integrity of value when manipulated by an ISR
@@ -45,6 +45,7 @@ void calc_on_time(void);
 void calc_on_off_periods();
 void toggle_leds(void);
 void go_to_sleep(void);
+void print_next_on_off_times(void);
 
 // setup is run once when the device is powered on
 void setup() {
@@ -69,7 +70,6 @@ void loop() {
     if (illuminate_led) {
         if (read_illumination_state) {
             led_on_time_start_ms = millis();
-            last_toggle_time_ms = led_on_time_start_ms;
             Serial.print("INF: Button press detected at time: ");
             Serial.print(led_on_time_start_ms);
             Serial.print(" ms\n");
@@ -83,13 +83,14 @@ void loop() {
             read_illumination_state = 0;  // turn OFF to only read these voltages once per button press
         
             calc_on_off_periods();
-            next_on_toggle_time_ms = last_toggle_time_ms;
+            next_on_toggle_time_ms = millis();
             next_off_toggle_time_ms = next_on_toggle_time_ms + on_time_period_ms;
+            // print_next_on_off_times();
         }
 
         toggle_leds();
 
-        if ((last_toggle_time_ms - led_on_time_start_ms) > led_on_duration_ms) {
+        if ((millis() - led_on_time_start_ms) > led_on_duration_ms) {
             illuminate_led = 0;
             read_illumination_state = 1;
             Serial.print("DBG: One shot duration exceeded at: ");
@@ -178,33 +179,25 @@ void toggle_leds() {
     You may be tempted to use delay() statements; resist that temptation.
     Delays are "blocking" and stall the device from responding to other events.
 
-    TODO: SET DUTY CYCLE
     */
 
-    unsigned long current_time_ms;
-    current_time_ms = millis();    
+    unsigned long current_time_ms = millis();
 
     if ((current_time_ms > next_on_toggle_time_ms) && (current_time_ms < next_off_toggle_time_ms)) 
     {
-        Serial.println("DBG: Setting LEDs HIGH/LOW");
+        // Serial.println("DBG: Setting LEDs HIGH/LOW");
         digitalWrite(LED_PIN, HIGH);
         digitalWrite(INV_LED_PIN, LOW);
-        last_toggle_time_ms = millis();
-        next_on_toggle_time_ms = last_toggle_time_ms + led_blink_period_ms;
-        Serial.print("DBG: Next ON time: ");
-        Serial.print(next_on_toggle_time_ms);
-        Serial.print(" ms\n");
+        // print_next_on_off_times();
     }
     else if (current_time_ms > next_off_toggle_time_ms)
     {
-        Serial.println("DBG: Setting LEDs LOW/HIGH");
+        // Serial.println("DBG: Setting LEDs LOW/HIGH");
         digitalWrite(LED_PIN, LOW);
         digitalWrite(INV_LED_PIN, HIGH);
-        last_toggle_time_ms = millis();
-        next_off_toggle_time_ms = last_toggle_time_ms + led_blink_period_ms;
-        Serial.print("DBG: Next OFF time: ");
-        Serial.print(next_off_toggle_time_ms);
-        Serial.print(" ms\n");
+        next_on_toggle_time_ms = next_off_toggle_time_ms + off_time_period_ms;
+        next_off_toggle_time_ms = next_on_toggle_time_ms + on_time_period_ms;
+        // print_next_on_off_times();
     }
     
 
@@ -232,5 +225,14 @@ void calc_on_off_periods() {
     off_time_period_ms = (float)led_blink_period_ms*(1-ASTABLE_DUTY_CYCLE);
     Serial.print("DBG: Off-time period: ");
     Serial.print(off_time_period_ms);
+    Serial.print(" ms\n");
+}
+
+void print_next_on_off_times(void) {
+    Serial.print("DBG: Next ON time: ");
+    Serial.print(next_on_toggle_time_ms);
+    Serial.print(" ms\n");
+    Serial.print("DBG: Next OFF time: ");
+    Serial.print(next_off_toggle_time_ms);
     Serial.print(" ms\n");
 }
