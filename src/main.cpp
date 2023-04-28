@@ -83,6 +83,8 @@ void loop() {
             read_illumination_state = 0;  // turn OFF to only read these voltages once per button press
         
             calc_on_off_periods();
+            next_on_toggle_time_ms = last_toggle_time_ms;
+            next_off_toggle_time_ms = next_on_toggle_time_ms + on_time_period_ms;
         }
 
         toggle_leds();
@@ -184,18 +186,28 @@ void toggle_leds() {
 
     if ((current_time_ms > next_on_toggle_time_ms) && (current_time_ms < next_off_toggle_time_ms)) 
     {
+        Serial.println("DBG: Setting LEDs HIGH/LOW");
         digitalWrite(LED_PIN, HIGH);
         digitalWrite(INV_LED_PIN, LOW);
+        last_toggle_time_ms = millis();
+        next_on_toggle_time_ms = last_toggle_time_ms + led_blink_period_ms;
+        Serial.print("DBG: Next ON time: ");
+        Serial.print(next_on_toggle_time_ms);
+        Serial.print(" ms\n");
     }
     else if (current_time_ms > next_off_toggle_time_ms)
     {
+        Serial.println("DBG: Setting LEDs LOW/HIGH");
         digitalWrite(LED_PIN, LOW);
         digitalWrite(INV_LED_PIN, HIGH);
+        last_toggle_time_ms = millis();
+        next_off_toggle_time_ms = last_toggle_time_ms + led_blink_period_ms;
+        Serial.print("DBG: Next OFF time: ");
+        Serial.print(next_off_toggle_time_ms);
+        Serial.print(" ms\n");
     }
     
-    last_toggle_time_ms = millis();
-    next_on_toggle_time_ms = last_toggle_time_ms + on_time_period_ms;
-    next_off_toggle_time_ms = next_on_toggle_time_ms = off_time_period_ms;
+
 }
 
 
