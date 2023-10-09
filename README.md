@@ -1,10 +1,33 @@
 # One Shot Blinking Light Firmware
 
-Arduino-based firmware developed in the PlatformIO development environment.
+Arduino-based firmware developed in the PlatformIO development environment for
+the Arduino Nano Every.  The fireware in this repository is an example of how to
+approach the function above, but is **not** the solution for the specifications
+above!!  
 
-## Firmware Notes
-Fireware is written to work with the Arduino Nano Every, but can be adapted to
-the Nano 33 BLE.
+## Functional Specifications
+### Firmware
+* Powered by 9 V battery.
+* SPST toggle power switch (ON/OFF).
+* SPST push button switch (ON/OFF) to turn LEDs (`D1-2`) on for 5 seconds and LED
+  (`D3`) for 10 seconds.
+* Potentiometer to adjust brightness of LED `D1-2` using PWM (0-100%).
+* Potentiometer to adjust blinking rate of LED `D3` (5-10 Hz).
+
+### PCB
+* Arduino Nano should be mounted to the board using a socket.
+* Single-sided traces.
+* Battery, switches potentiometers and LEDs should all be panel-mounted and
+  connected to the board individually using 1x2 sockets.
+
+### Enclosure
+* Make an enclosure of a Blue Devil (or some other fun figure) where `D1-2` are
+  the eyes and `D3` is the nose.
+* The enclosure should be designed to be 3D printed.
+* The enclosure should securely hold the PCB and battery internally.
+* The power switch and push button should be securely panel mounted.
+* The potentiometers should be securely panel mounted in the Blue Devil "ears".
+ 
 ## Circuit
 KiCad project is under `circuit/`.
 
