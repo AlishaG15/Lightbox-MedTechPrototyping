@@ -32,7 +32,12 @@ above!!
 KiCad project is under `circuit/`.
 
 ![schematic.png](circuit/schematic.png)
+
+### Arduino Nano Every Pinout
 ![arduino_nano_every_pinout.png](arduino_nano_every_pinout.png)
+
+### Arduino Nano Pinout
+![arduino_nano_pinout.png](Pinout-NANO_latest.png)
 
 ## Troubleshooting
 ```
