@@ -13,6 +13,7 @@ above!!
   (`D3`) for 10 seconds.
 * Potentiometer to adjust brightness of LED `D1-2` using PWM (0-100%).
 * Potentiometer to adjust blinking rate of LED `D3` (5-10 Hz).
+* Have a "heartbeat" LED blinking at 1 Hz (`D4`) attached to pin `D13`.
 
 ### PCB
 * Arduino Nano should be mounted to the board using a socket.
