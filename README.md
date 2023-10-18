@@ -1,9 +1,9 @@
 # One Shot Blinking Light Firmware
 
 Arduino-based firmware developed in the PlatformIO development environment for
-the Arduino Nano Every.  The fireware in this repository is an example of how to
-approach the function above, but is **not** the solution for the specifications
-above!!  
+the Arduino Nano [Every].  The fireware in this repository is an example of how
+to approach the function above, but is **not** the solution for the
+specifications below!!  
 
 ## Functional Specifications
 ### Firmware
@@ -28,6 +28,22 @@ above!!
 * The enclosure should securely hold the PCB and battery internally.
 * The power switch and push button should be securely panel mounted.
 * The potentiometers should be securely panel mounted in the Blue Devil "ears".
+
+## Project Management / Implementation Expectations
+* The entire project should be managed in a git repository, with me (`mlp6`) added as a `Maintainer`.
+* Questions about debugging code should be submitted as GitLab Issues that are assigned to me (`mlp6`).
+* Final firmware should use "best" coding practices discussed in lecture, including:
+  + Good firmware architecture:
+    - `#include`
+    - `#define`
+    - Function declarations
+    - Global variable definitions
+    - `setup()`
+    - `loop()`
+    - Function definitions
+  + `#define MACROS` for all user specifications, pin mappings, etc.
+  + Interrupts for all "events"
+  + State machine-like `loop`
  
 ## Circuit
 KiCad project is under `circuit/`.
