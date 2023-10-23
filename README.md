@@ -68,6 +68,7 @@ https://support.arduino.cc/hc/en-us/articles/360016495679-Fix-port-access-on-Lin
 ## Resources
 * https://docs.arduino.cc/resources/datasheets/ABX00028-datasheet.pdf
 * https://docs.arduino.cc/resources/datasheets/ABX00031-datasheet.pdf
+* https://www.arduino.cc/reference/en/language/functions/analog-io/analogread/
 * https://docs.platformio.org/en/stable/boards/atmelmegaavr/nano_every.html
 * https://docs.platformio.org/en/latest/boards/nordicnrf52/nano33ble.html
 
