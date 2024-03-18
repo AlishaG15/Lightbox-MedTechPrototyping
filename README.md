@@ -30,6 +30,7 @@ The [firmware](src/main.cpp) in this repository is an example of how to approach
 * The power switch and push button should be securely panel mounted.
 * The potentiometers should be securely panel mounted in the Blue Devil "ears".
 * Any solder junctions between wires should be covered with heat shrink tubing.
+* Use [threaded inserts](https://hackaday.com/2019/02/28/threading-3d-printed-parts-how-to-use-heat-set-inserts/) to attach parts together.
 * You do *not* need to include mechanical drawings in your final submission.
 * Include a directory in your git repository called `cad/` that includes:
   + A screenshot of your 3D model, saved as `model.png`.
@@ -85,5 +86,6 @@ Create a `Testing.md` file in your repository that includes the following:
 ## Resources
 * https://docs.platformio.org/en/stable/boards/atmelmegaavr/nano_every.html
 * https://docs.arduino.cc/resources/datasheets/ABX00028-datasheet.pdf
+* https://hackaday.com/2019/02/28/threading-3d-printed-parts-how-to-use-heat-set-inserts/
 
 Copyright (c) [2024] [Mark L. Palmeri]
