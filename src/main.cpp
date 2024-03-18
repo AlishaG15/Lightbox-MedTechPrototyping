@@ -1,3 +1,8 @@
+/* WARNING - THIS CODE DOES NOT COMPILE
+ * IT IS MEANT TO SHOW EXAMPLE SYNTAX AND
+ * STRUCTURE FOR A SIMPLE ARDUINO PROGRAM
+ */
+
 // LOAD ALL LIBRARIES FIRST
 #include <Arduino.h>
 #include <avr/sleep.h> 
@@ -8,17 +13,10 @@
 // All device specification-related values should be defined here, *not* in the downstream code!  You should
 // not have to search the code for where values are defined / used.
 #define LED_PIN 13  // D13
-#define INV_LED_PIN 10 // D10
 #define BUTTON_INTERRUPT_PIN 2 // D2
-#define ASTABLE_POT_PIN A0
 #define MONOSTABLE_POT_PIN A1
-#define SLEEP_DELAY_MS 250
 #define ANALOG_READ_RANGE 1023 // 10-bit ((2**10)-1); 10-bit is specific to your microcontroller (see datasheet)
-#define ASTABLE_MIN_BLINK_RATE_HZ 5
-#define ASTABLE_MAX_BLINK_RATE_HZ 10
-#define ASTABLE_DUTY_CYCLE 0.5
-#define MONOSTABLE_MIN_DURATION_MS 1000
-#define MONOSTABLE_MAX_DURATION_MS 2000
+#define MONOSTABLE_DURATION_MS 2000
 
 // DEFINE ALL VARIABLES
 // volatile keywork used to insure integrity of value when manipulated by an ISR
@@ -47,11 +45,14 @@ void toggle_leds(void);
 void go_to_sleep(void);
 void print_next_on_off_times(void);
 
+// setup state machine enum and variable
+enum states {IDLE, READ_ADC, CALC_ON_TIME, TOGGLE_LED};
+int state = IDLE;
+
 // setup is run once when the device is powered on
 void setup() {
     // enable digital pins
     pinMode(LED_PIN, OUTPUT);
-    pinMode(INV_LED_PIN, OUTPUT);
     pinMode(BUTTON_INTERRUPT_PIN, INPUT_PULLUP); // pull pin up to HIGH if not driven by input signal
     
     // associate an ISR with a pin event
@@ -64,54 +65,39 @@ void setup() {
     Serial.println("INF: Device initialized.");
 }
 
-// loop continuously runs after setup until to break/stop it
-// note that the loop reads like an "action script"
+// this loop continuous runs and switches the active state represented in the
+// state variable enum value
 void loop() {
-    if (illuminate_led) {
-        if (read_illumination_state) {
-            led_on_time_start_ms = millis();
-            Serial.print("INF: Button press detected at time: ");
-            Serial.print(led_on_time_start_ms);
-            Serial.print(" ms\n");
-
-            read_astable_voltage();
-            calc_blink_period();
-
-            read_monostable_voltage();
-            calc_on_time();
-        
-            read_illumination_state = 0;  // turn OFF to only read these voltages once per button press
-        
-            calc_on_off_periods();
-            next_on_toggle_time_ms = millis();
-            next_off_toggle_time_ms = next_on_toggle_time_ms + on_time_period_ms;
-            // print_next_on_off_times();
-        }
-
-        toggle_leds();
-
-        if ((millis() - led_on_time_start_ms) > led_on_duration_ms) {
-            illuminate_led = 0;
-            read_illumination_state = 1;
-            Serial.print("DBG: One shot duration exceeded at: ");
-            Serial.print(millis());
-            Serial.print(" ms\n");
-        }
-    }
-    else
-    {
-        go_to_sleep();
-    }
     
+    switch (state)
+    {
+    case IDLE:
+        go_to_sleep();  // only the button ISR will wake the device from sleep and allow the state to change
+        break;
+    // ideally disable the button ISR (detachInterrupt) while in the following states
+    case READ_ADC:
+        read_monostable_voltage();
+        state = CALC_ON_TIME;
+        break;
+    case CALC_ON_TIME:
+        calc_on_time();
+        state = TOGGLE_LED;
+        break;
+    case TOGGLE_LED:
+        toggle_leds();
+        break;
+    default:  // this is a catch-all for any unexpected state
+        break;
+    }
+
 }
+
 
 void do_this_after_button_press() {
     /* Interupt Service Routine (ISR)
-
     Code in this ISR must consume minimal resources and run quickly.
-
     */
-    illuminate_led = 1;
+   state = READ_ADC;  // this will cause the switch statement in the loop to change to the READ_ADC state (case)
 }
 
 void read_astable_voltage() {
@@ -187,14 +173,12 @@ void toggle_leds() {
     {
         // Serial.println("DBG: Setting LEDs HIGH/LOW");
         digitalWrite(LED_PIN, HIGH);
-        digitalWrite(INV_LED_PIN, LOW);
         // print_next_on_off_times();
     }
     else if (current_time_ms > next_off_toggle_time_ms)
     {
         // Serial.println("DBG: Setting LEDs LOW/HIGH");
         digitalWrite(LED_PIN, LOW);
-        digitalWrite(INV_LED_PIN, HIGH);
         next_on_toggle_time_ms = next_off_toggle_time_ms + off_time_period_ms;
         next_off_toggle_time_ms = next_on_toggle_time_ms + on_time_period_ms;
         // print_next_on_off_times();
