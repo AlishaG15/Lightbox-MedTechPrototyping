@@ -31,6 +31,10 @@ The [firmware](src/main.cpp) in this repository is an example of how to approach
 * The potentiometers should be securely panel mounted in the Blue Devil "ears".
 * Any solder junctions between wires should be covered with heat shrink tubing.
 * You do *not* need to include mechanical drawings in your final submission.
+* Include a directory in your git repository called `cad/` that includes:
+  + A screenshot of your 3D model, saved as `model.png`.
+  + The `model.stl` file for your 3D model that was 3D printed.
+
 
 ## Project Management / Implementation Expectations
 * The entire project should be managed in a git repository called `one-shot-blinking-light`, with me (`mlp6`) and your TAs added as `Maintainers`.
@@ -49,7 +53,11 @@ The [firmware](src/main.cpp) in this repository is an example of how to approach
   + Interrupts for all "events"
  
 ## Circuit
-KiCad project is under `circuit/`.
+* Please include your entire KiCad project in a directory called `circuit/` within your git repository.
+* In addition to your KiCad project, please also include:
+  + A screenshot of your schematic, saved as `schematic.png`.
+  + A screenshot of your PCB layout, saved as `pcb.png`.
+  + Passing `DRC.rpt` and `ERC.rpt` files.
 
 The circuit below is **not** valid for the functions above, but just show a representation of some of the desired functionality.  
 
@@ -68,6 +76,11 @@ Create a `Testing.md` file in your repository that includes the following:
 * Include all "raw" data measured during testing in your `Testing.md` file, along with a brief description of how the data were collected (so that someone couple replicate your measurements).
 * Include all plots of analysis of your raw data in your `Testing.md` file.
 * Discuss any disagreements between your testing results and the expected results from the specifications.
+
+## What to Submit
+* Make sure that your git repository containts the firmware, CAD and KiCad components described above.
+* Create an annotated tag of your "final" commit for this project called `final`.
+* Upload a zip archive of the `final`-tagged commit of your git repository to the final project assignment in Gradescope.
 
 ## Resources
 * https://docs.platformio.org/en/stable/boards/atmelmegaavr/nano_every.html
