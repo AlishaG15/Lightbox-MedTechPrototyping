@@ -64,10 +64,10 @@ The circuit below is **not** valid for the functions above, but just show a repr
 
 **Note, specifically, that this circuit lacks any of the required socket connections.**
 
-![schematic.png](circuit/schematic.png)
+<img src="circuit/schematic.png" alt="schematic" width="800"/>
 
 ### Arduino Nano Every Pinout
-![arduino_nano_every_pinout.png](arduino_nano_every_pinout.png)
+<img src="arduino_nano_every_pinout.png" alt="pinout" width="800"/>
 
 ## Testing
 Create a `Testing.md` file in your repository that includes the following:
@@ -82,6 +82,28 @@ Create a `Testing.md` file in your repository that includes the following:
 * Make sure that your git repository containts the firmware, CAD and KiCad components described above.
 * Create an annotated tag of your "final" commit for this project called `final`.
 * Upload a zip archive of the `final`-tagged commit of your git repository to the final project assignment in Gradescope.
+
+## Proposed Timeline (Latest Dates to Complete)
+* March 22
+  + Draft enclosure CAD -> 3D print
+* March 29
+  + Schematic & PCB layout
+  + Rough fit in enclosure (CAD and mock in 3D print)
+  + Finish first-pass firmware
+* April 05 
+  + Finalize PCB layout and submit for milling
+  + Finalize enclosure CAD and 3D print
+  + Test and finalize firmware (gather testing data)
+* April 12
+  + Solder PCB
+  + Test PCB
+  + Start device integration and assembly
+* April 19
+  + Last chance for redo PCBs and 3D prints
+  + Finalize testing and documentation
+* April 26
+  + Final submission!
+  + No late submissions accepted.
 
 ## Resources
 * https://docs.platformio.org/en/stable/boards/atmelmegaavr/nano_every.html
