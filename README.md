@@ -17,7 +17,7 @@ The [firmware](src/main.cpp) in this repository is an example of how to approach
 * SPST toggle power switch (ON/OFF).
 * SPST push button switch (ON/OFF) to turn LEDs (`D1-2`) on for 5 seconds and LED
   (`D3`) for 10 seconds.
-* Potentiometer to adjust brightness of LED `D1-2` using PWM (0-100%).
+* Potentiometer to adjust brightness of LED `D1-2` using [Pulse Width Modulation (PWM)](https://docs.arduino.cc/learn/microcontrollers/analog-output/) (0-100%).
 * Potentiometer to adjust blinking rate of LED `D3` (5-10 Hz).
 * Have a "heartbeat" LED blinking at 1 Hz (`D4`) attached to pin `D13`.
 
@@ -109,5 +109,6 @@ Create a `Testing.md` file in your repository that includes the following:
 * https://docs.platformio.org/en/stable/boards/atmelmegaavr/nano_every.html
 * https://docs.arduino.cc/resources/datasheets/ABX00028-datasheet.pdf
 * https://hackaday.com/2019/02/28/threading-3d-printed-parts-how-to-use-heat-set-inserts/
+* https://docs.arduino.cc/learn/microcontrollers/analog-output/
 
 Copyright (c) [2024] [Mark L. Palmeri]
