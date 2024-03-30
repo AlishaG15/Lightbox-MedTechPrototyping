@@ -10,6 +10,7 @@ the Arduino Nano Every.
 * Arduino Nano Every should be mounted to the board using a socket.
 * Single-sided traces.
 * Battery, switches potentiometers and LEDs should all be panel-mounted and connected to the board individually using 1x2 sockets.
+* In your copper ground pour, please include your name (so we can identify boards during panel milling).
 
 ### Firmware
 The [firmware](src/main.cpp) in this repository is an example of how to approach the function above, but is **not** the solution for the specifications below!!  
