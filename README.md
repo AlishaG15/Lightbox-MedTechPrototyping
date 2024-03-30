@@ -23,7 +23,7 @@ Below is a checklist of things students typically overlook on first pass / shoul
 #### Component Footprints
 When choosing a footprint for components, such as resistors, make sure to choose one that will physically allow the component to sit flust on the PCB.  For example, a low-wattage, ceramic THT resistor, needs ~10 mm of space (pitch) between its leads to sit flush on a PCB:
 
-![resistor_tht_footprint](resistor_tht_footprint.png)
+<img src="resistor_tht_footprint.png" alt="resistor_tht_footprint" width="800"/>
 
 ### Firmware
 The [firmware](src/main.cpp) in this repository is an example of how to approach the function above, but is **not** the solution for the specifications below!!  
