@@ -11,6 +11,7 @@ the Arduino Nano Every.
 * Single-sided traces.
 * Battery, switches potentiometers and LEDs should all be panel-mounted and connected to the board individually using 1x2 sockets.
 
+#### Commonly Missed Items Checklist
 Below is a checklist of things students typically overlook on first pass / should include in their schematics:
 * [ ] Make sure that off-board components are `Excluded from board` (in `Properties`).
 * [ ] Every connector should have a "mate"; one is on-board, one is off-board.
@@ -18,6 +19,11 @@ Below is a checklist of things students typically overlook on first pass / shoul
 * [ ] Don't forget mounting holes!
 * [ ] Don't forget your schematic (and PCB) metadata!
 * [ ] Make sure your ERC and DRC pass before submitting for review / milling.
+
+#### Component Footprints
+When choosing a footprint for components, such as resistors, make sure to choose one that will physically allow the component to sit flust on the PCB.  For example, a low-wattage, ceramic THT resistor, needs ~10 mm of space (pitch) between its leads to sit flush on a PCB:
+
+![resistor_tht_footprint](resistor_tht_footprint.png)
 
 ### Firmware
 The [firmware](src/main.cpp) in this repository is an example of how to approach the function above, but is **not** the solution for the specifications below!!  
