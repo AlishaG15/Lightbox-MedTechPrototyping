@@ -96,6 +96,9 @@ Create a `Testing.md` file in your repository that includes the following:
 * Make sure that your git repository containts the firmware, CAD and KiCad components described above.
 * Create an annotated tag of your "final" commit for this project called `final`.
 * Upload a zip archive of the `final`-tagged commit of your git repository to the final project assignment in Gradescope.
+* Do a "live" demo for Dr. Palmeri of your device **OR** send him a Teams chat message with:
+  * Pictures of the device assembled and shots of the "internals".
+  * A brief video demonstrating functionality.
 
 ## Proposed Timeline (Latest Dates to Complete)
 * March 22
