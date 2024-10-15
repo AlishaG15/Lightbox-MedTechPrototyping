@@ -92,7 +92,9 @@ The [firmware](src/main.cpp) in this repository is an example of how to approach
 
 * Please include your entire KiCad project in a directory called `circuit/` within your git repository.
 
-The **example** circuit below is **not** valid for the functions above, but just show a representation of some of the desired functionality.  :warning: *This circuit lacks any of the required socket connections.**
+The **example** circuit below is **not** valid for the functions above, but just show a representation of some of the desired functionality.  :warning: *This circuit lacks any of the required socket connections.**  
+
+You should overwrite the entire KiCad project with your own design.
 
 <img src="circuit/schematic.png" alt="schematic" width="800"/>
 
@@ -101,7 +103,7 @@ The **example** circuit below is **not** valid for the functions above, but just
 
 ## Testing
 
-Create a `technical_report.ipynb` Jupyter notebook in your repository that includes the following:
+Populate the  [testing/technical_report.ipynb](testing/technical_report.ipynb) Jupyter notebook in your repository that includes the following:
 
 * Quantify the linear trend (think linear regression) between your potentiometer setting and the brightness of your "eye" LEDs.
 * Quantify the linear trend between your potentiometer setting and the blinking rate of the "nose" LED.
