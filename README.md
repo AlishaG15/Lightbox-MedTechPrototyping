@@ -69,6 +69,12 @@ The [firmware](src/main.cpp) in this repository is an example of how to approach
   * A screenshot of your 3D model, saved as `model.png`.
   * The `model.stl` file for your 3D model that was 3D printed.
 
+#### Example "Fun" Enclosures
+
+![example enclosure 01](cad/example01.png)
+![example enclosure 02a](cad/example02a.png)
+![example enclosure 02b](cad/example02b.png)
+
 
 ## Project Management / Implementation Expectations
 
