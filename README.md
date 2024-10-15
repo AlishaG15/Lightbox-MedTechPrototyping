@@ -97,10 +97,8 @@ The [firmware](src/main.cpp) in this repository is an example of how to approach
 ## Circuit
 
 * Please include your entire KiCad project in a directory called `circuit/` within your git repository.
-
-The **example** circuit below is **not** valid for the functions above, but just show a representation of some of the desired functionality.  :warning: *This circuit lacks any of the required socket connections.**  
-
-You should overwrite the entire KiCad project with your own design.
+* The **example** circuit below is **not** valid for the functions above, but just show a representation of some of the desired functionality.  :warning: *This circuit lacks any of the required socket connections.**  
+* You should overwrite the entire KiCad project with your own design.
 
 <img src="circuit/schematic.png" alt="schematic" width="800"/>
 
@@ -125,6 +123,41 @@ Populate the  [testing/technical_report.ipynb](testing/technical_report.ipynb) J
 * Make sure that your git repository containts the firmware, CAD and KiCad components described above.
 * Schedule a "live" demo of your device for Dr. Palmeri before finals week.
 * :warning" **NO LATE SUBMISSIONS ARE ACCEPTED FOR THIS PROJECT.**
+
+## Grading Criteria
+
+* Enclosure (25%)
+  * Complexity
+  * Internal mounting of PCB and battery
+  * Secure panel mounting of switches and potentiometers
+  * Fit of pieces
+  * Meets size constraints
+  * git repository organization
+* Circuit (25%)
+  * Correctness of circuit
+  * Correctness of PCB layout
+  * Soldering / wire routing / heat shrink tubing
+  * Mounting
+  * git repository organization
+* Firmware (25%)
+  * State maching implementation
+  * Use of macros, variables, strcuts, etc.
+  * Interrupts
+  * Modularity of code (e.g., functions)
+  * Readability of code
+  * git repository organization
+* Testing (25%)
+  * Technical report
+  * Data analysis
+  * Live demo
+  * git repository organization
+
+### Letter Grade Equivalents
+
+* A[+/-]: Industry internship worthy
+* B[+/-]: Good, but needs some work
+* C[+/-]: Passable, but needs significant work
+* D: Major flaws
 
 ## Resources
 
