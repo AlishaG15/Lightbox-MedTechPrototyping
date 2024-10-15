@@ -5,6 +5,7 @@
 
 // LOAD ALL LIBRARIES FIRST
 #include <Arduino.h>
+#include <avr/sleep.h>  // for sleep_cpu()
 
 // DEFINE ALL PREPROCESSOR MACROS
 // see pinout in datasheet to know what pins are where / do what
