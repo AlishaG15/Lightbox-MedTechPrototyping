@@ -1,4 +1,4 @@
-# One Shot Blinking Light Firmware
+# Lightbox ("One Shot Blinking Light")
 
 Arduino-based firmware developed in the PlatformIO development environment for
 the Arduino Nano Every.  
