@@ -122,7 +122,7 @@ Populate the  [testing/technical_report.ipynb](testing/technical_report.ipynb) J
 * Create a Merge Request assigned to Dr. Palmeri to submit your final project.
 * Make sure that your git repository containts the firmware, CAD and KiCad components described above.
 * Schedule a "live" demo of your device for Dr. Palmeri before finals week.
-* :warning" **NO LATE SUBMISSIONS ARE ACCEPTED FOR THIS PROJECT.**
+* :warning: **NO LATE SUBMISSIONS ARE ACCEPTED FOR THIS PROJECT.**
 
 ## Grading Criteria
 
