@@ -1,0 +1,16 @@
+(version 1)
+# adapted from: https://github.com/labtroll/KiCad-DesignRules/blob/main/JLCPCB/JLCPCB.kicad_dru
+
+(rule "Track Width"
+	(condition "A.Type == 'track'")
+	(constraint track_width (min 20mil))
+)
+
+(rule "Track Clearance"
+	(condition "A.Type == 'track' && B.Type == A.Type")
+	(constraint clearance (min 32mil))
+)
+
+(rule "Hole Size"
+	(constraint hole_size (min 0.8mm) (max 3.2mm))
+)
