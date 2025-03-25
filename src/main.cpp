@@ -5,13 +5,15 @@
 
 // LOAD ALL LIBRARIES FIRST
 #include <Arduino.h>
-#include <avr/sleep.h>  // for sleep_cpu()
 
 // DEFINE ALL PREPROCESSOR MACROS
 // see pinout in datasheet to know what pins are where / do what
 // NOTE: macros are defined in ALL CAPS to help identify their usage in the code (in contrast to variables)
 // All device specification-related values should be defined here, *not* in the downstream code!  You should
 // not have to search the code for where values are defined / used.
+//
+// REMEMBER THAT ONLY DIGITAL OUTPUT PINS ANNOCATED WITH A ~ ON THE PINOUT DIAGRAM CAN BE USED FOR PWM
+
 #define LED_PIN 13  // D13
 #define BUTTON_INTERRUPT_PIN 2 // D2
 #define MONOSTABLE_POT_PIN A1
@@ -34,7 +36,7 @@ void setup() {
     // pinMode(BUTTON_INTERRUPT_PIN, INPUT_PULLUP); // pull pin up to HIGH if not driven by input signal
     
     // associate an ISR with a pin event
-    // attachInterrupt(digitalPinToInterrupt(BUTTON_INTERRUPT_PIN), do_this_after_button_press, FALLING);  // FALLING = HIGH -> LOW transition
+    // attachInterrupt(digitalPinToInterrupt(BUTTON_INTERRUPT_PIN), do_this_after_button_press, FALLING);
     
     // start the serial (communication) monitor
     // 9600 is the baud rate (rate of data communication, 9600 bits/s)
@@ -47,9 +49,12 @@ void setup() {
 // state variable enum value
 void loop() {
     
+    // add state-agnostic code here
+
+
+    // state machine
     switch (state) {
         case IDLE:
-            go_to_sleep();  // only the button ISR will wake the device from sleep and allow the state to change
             break;
         // ideally disable the button ISR (detachInterrupt) while in the following states
         case READ_ADC:
@@ -124,18 +129,6 @@ void calc_on_time() {
     Serial.print(led_on_duration_ms);
     Serial.print(" ms\n");
 }
-
-/*
-void go_to_sleep() {
-    digitalWrite(LED_PIN, 0);
-    digitalWrite(INV_LED_PIN, 0);
-    Serial.println("INF: Bored; nothing to do... going to sleep.");
-    sleep_enable();  // dependent on avr/sleep.h
-    set_sleep_mode(SLEEP_MODE_PWR_DOWN); // dependent on avr/sleep.h
-    delay(SLEEP_DELAY_MS);  // delay a bit to make sure chip has everything done before sleeping
-    sleep_cpu(); // dependent on avr/sleep.h
-}
-*/
 
 void toggle_leds() {
     /* Toggle LED on/off state based on duty cycle and blink rate

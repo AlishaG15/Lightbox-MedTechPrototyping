@@ -3,6 +3,9 @@
 Arduino-based firmware developed in the PlatformIO development environment for
 the Arduino Nano Every.  
 
+You are expected to use best `git` version control practices for this project,
+including meaningful, focused commits with good commit messages.
+
 ## Functional Specifications
 
 ### Electronics / PCB
@@ -11,7 +14,7 @@ the Arduino Nano Every.
 * SPST toggle power switch (ON/OFF).
 * Arduino Nano Every should be mounted to the board using a socket.
 * Single-sided traces.
-* Battery, switches potentiometers and LEDs should all be panel-mounted and connected to the board individually using 1x2 sockets.
+* Battery, switches potentiometers and LEDs should all be panel-mounted and connected to the board individually using 1x2 connectors.
 
 #### Commonly Missed Items Checklist
 
@@ -19,14 +22,17 @@ Below is a checklist of things students typically overlook on first pass / shoul
 
 * [ ] Make sure that off-board components are `Excluded from board` (in `Properties`).
 * [ ] Every connector should have a "mate"; one is on-board, one is off-board.
-* [ ] Please include your name so we can identify boards during panel milling.
+* [ ] Please include your name in the `GND` pour so we can identify boards during panel milling.
 * [ ] Don't forget mounting holes!
 * [ ] Don't forget your schematic (and PCB) metadata!
 * [ ] Make sure your ERC and DRC pass before submitting for review / milling.
 
 #### Component Footprints
 
-When choosing a footprint for components, such as resistors, make sure to choose one that will physically allow the component to sit flust on the PCB.  For example, a low-wattage, ceramic THT resistor, needs ~10 mm of space (pitch) between its leads to sit flush on a PCB:
+When choosing a footprint for components, such as resistors, make sure to choose
+one that will physically allow the component to sit flust on the PCB.  For
+example, a low-wattage, ceramic THT resistor, needs ~10 mm of space (pitch)
+between its leads to sit flush on a PCB:
 
 <img src="resistor_tht_footprint.png" alt="resistor_tht_footprint" width="800"/>
 
@@ -44,6 +50,7 @@ Below is a table of the parts you will use in your circuit:
 | 2 Pin Connector | B02B-XASK-1 | 455-B02B-XASK-1-ND |
 | 2 Pin Jumper | A02XAF02XAF22K152B | 455-3061-ND |
 | 10k Potentiometer | PDB181-E420K-103B | PDB181-E420K-103B-ND |
+| Transistor | IRFZ44 | (TO220 Packaging) |
 
 ### Firmware
 
@@ -52,6 +59,7 @@ The [firmware](src/main.cpp) in this repository is an example of how to approach
 * SPST push button switch (ON/OFF) to turn "eye" LEDs on for 5 seconds and "nose" LED for 10 seconds.
 * Potentiometer to adjust brightness of "eye" LEDs using [Pulse Width Modulation (PWM)](https://docs.arduino.cc/learn/microcontrollers/analog-output/) (0-100%).
 * Potentiometer to adjust blinking rate of "nose" LED (5-10 Hz).
+* Remember that only digital pins annotated with a `~` in the Arduino Nano Every pinout can be used for PWM.
 * Have the on-board Nano Every LED (`D13`) act as a "heartbeat" LED blinking at 1 Hz in all states.
 
 ### Enclosure
@@ -78,7 +86,7 @@ The [firmware](src/main.cpp) in this repository is an example of how to approach
 
 ## Project Management / Implementation Expectations
 
-* Fork this git repository and add Dr. Palmeri and your TAs added as `Maintainers`.
+* Fork this git repository and add Dr. Palmeri as a `Maintainer`.
 * Questions about debugging code should be submitted as GitLab Issues that are assigned to your TAs (they can escalated to me).
 * Include your KiCad project in a subdirectory called `circuit/`.
 * Include your CAD model in a subdirectory called `cad/`, including the files described above.
@@ -97,10 +105,7 @@ The [firmware](src/main.cpp) in this repository is an example of how to approach
 ## Circuit
 
 * Please include your entire KiCad project in a directory called `circuit/` within your git repository.
-* The **example** circuit below is **not** valid for the functions above, but just show a representation of some of the desired functionality.  :warning: *This circuit lacks any of the required socket connections.**  
-* You should overwrite the entire KiCad project with your own design.
-
-<img src="circuit/schematic.png" alt="schematic" width="800"/>
+* A project template, along with design rules and one project-specific part, are included in `circuit/` for you to use as a starting point.
 
 ### Arduino Nano Every Pinout
 <img src="arduino_nano_every_pinout.png" alt="pinout" width="800"/>
@@ -119,10 +124,11 @@ Populate the  [testing/technical_report.ipynb](testing/technical_report.ipynb) J
 
 ## What to Submit
 
-* Create a Merge Request assigned to Dr. Palmeri to submit your final project.
 * Make sure that your git repository containts the firmware, CAD and KiCad components described above.
-* Schedule a "live" demo of your device for Dr. Palmeri before finals week.
-* :warning: **NO LATE SUBMISSIONS ARE ACCEPTED FOR THIS PROJECT.**
+* Push an annotated tag to your repository called `final_project_submission` that contains the final commit of your project.
+* Create an Issue assigned to Dr. Palmeri titled `Final Project Complete`.
+* Upload a PDF of your rendered Jupyter notebook to Gradescope and associated each question with the appropriate page in your notebook.
+* :warning: **NO LATE SUBMISSIONS ARE ACCEPTED FOR THIS PROJECT.**  Treat the submission of this project just like a final exam timeslot.
 
 ## Grading Criteria
 
