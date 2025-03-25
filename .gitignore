@@ -2,3 +2,5 @@
 .vscode/
 *-backups/
 *lck
+.DS_Store
+fp-info-cache

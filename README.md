@@ -35,7 +35,11 @@ one that will physically allow the component to sit flust on the PCB.  For
 example, a low-wattage, ceramic THT resistor, needs ~10 mm of space (pitch)
 between its leads to sit flush on a PCB:
 
-<img src="resistor_tht_footprint.png" alt="resistor_tht_footprint" width="800"/>
+<img src="images/resistor_tht_footprint.png" alt="resistor_tht_footprint" width="600"/>
+
+:warning: The outline for the 2-pin connectors in KiCad is a bit smaller than the connector bodies that we have.  Give yourself some extra space to prevent the connector bodies from interfering with one another.
+
+<img src="images/connector_interference.png" alt="connector interference" width="600"/>
 
 Below is a table of the parts you will use in your circuit:
 
@@ -60,7 +64,6 @@ The [firmware](src/main.cpp) in this repository is an example of how to approach
 * SPST push button switch (ON/OFF) to turn "eye" LEDs on for 5 seconds and "nose" LED for 10 seconds.
 * Potentiometer to adjust brightness of "eye" LEDs using [Pulse Width Modulation (PWM)](https://docs.arduino.cc/learn/microcontrollers/analog-output/) (0-100%).
 * Potentiometer to adjust blinking rate of "nose" LED (5-10 Hz).
-* Remember that only digital pins annotated with a `~` in the Arduino Nano Every pinout can be used for PWM.
 * Have the on-board Nano Every LED (`D13`) act as a "heartbeat" LED blinking at 1 Hz in all states.
 
 ### Enclosure
@@ -80,9 +83,9 @@ The [firmware](src/main.cpp) in this repository is an example of how to approach
 
 #### Example "Fun" Enclosures
 
-![example enclosure 01](cad/example01.png)
-![example enclosure 02a](cad/example02a.png)
-![example enclosure 02b](cad/example02b.png)
+<img src="cad/example01.png" alt="example01" width="400"/>)
+<img src="cad/example02a.png" alt="example02a" width="400"/>)
+<img src="cad/example02b.png" alt="example02b" width="400"/>)
 
 
 ## Project Management / Implementation Expectations
@@ -109,7 +112,10 @@ The [firmware](src/main.cpp) in this repository is an example of how to approach
 * A project template, along with design rules and one project-specific part, are included in `circuit/` for you to use as a starting point.
 
 ### Arduino Nano Every Pinout
-<img src="arduino_nano_every_pinout.png" alt="pinout" width="800"/>
+
+:warning: Remember that only digital pins annotated with a `~` in the Arduino Nano Every pinout can be used for PWM.
+
+<img src="images/arduino_nano_every_pinout.png" alt="pinout" width="800"/>
 
 ## Testing
 
@@ -168,7 +174,7 @@ Populate the  [testing/technical_report.ipynb](testing/technical_report.ipynb) J
 
 ## Resources
 
-* https://docs.platformio.org/en/stable/boards/atmelmegaavr/nano_every.html
-* https://docs.arduino.cc/resources/datasheets/ABX00028-datasheet.pdf
-* https://hackaday.com/2019/02/28/threading-3d-printed-parts-how-to-use-heat-set-inserts/
-* https://docs.arduino.cc/learn/microcontrollers/analog-output/
+* [PlatformIO: Nano Every](https://docs.platformio.org/en/stable/boards/atmelmegaavr/nano_every.html)
+* [Arduino Nano Every Datasheet](https://docs.arduino.cc/resources/datasheets/ABX00028-datasheet.pdf)
+* [Hackaday: Heat Set Inserts](https://hackaday.com/2019/02/28/threading-3d-printed-parts-how-to-use-heat-set-inserts/)
+* [Arduino: Analog (PWM) Output](https://docs.arduino.cc/learn/microcontrollers/analog-output/)
