@@ -15,6 +15,7 @@ including meaningful, focused commits with good commit messages.
 * Arduino Nano Every should be mounted to the board using a socket.
 * Single-sided traces.
 * Battery, switches potentiometers and LEDs should all be panel-mounted and connected to the board individually using 1x2 connectors.
+* Each output LED should be driven with a digital output signal input into an `IRFZ44` MOSFET that delivers power to each LED.
 
 #### Commonly Missed Items Checklist
 
