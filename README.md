@@ -121,12 +121,13 @@ The [firmware](src/main.cpp) in this repository is an example of how to approach
 
 Populate the  [testing/technical_report.ipynb](testing/technical_report.ipynb) Jupyter notebook in your repository that includes the following:
 
+* Include a brief outline in your report that describes your testing methodology.
+* Include all "raw" data measured during testing in `data*.csv` files.
+* Include all statistical analysis and plots associated with your data analysis.
+* Include some pictures of your final device, include the fully-assembled version and a picture of the internals, in your report.
 * Quantify the linear trend (think linear regression) between your potentiometer setting and the brightness of your "eye" LEDs.
 * Quantify the linear trend between your potentiometer setting and the blinking rate of the "nose" LED.
 * Quantify the accuracy (think 95% CI) of your heartbeat LED blinking at 1 Hz.
-* Include a break outline in your report that describes your testing methodology.
-* Include all "raw" data measured during testing in `data*.csv` files.
-* Include all statistical analysis and plots associated with your data analysis.
 * Discuss any disagreements between your testing results and the expected results from the specifications.
 
 ## What to Submit
