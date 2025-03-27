@@ -127,7 +127,7 @@ Populate the  [testing/technical_report.ipynb](testing/technical_report.ipynb) J
 * Include some pictures of your final device, include the fully-assembled version and a picture of the internals, in your report.
 * Quantify the linear trend (think linear regression) between your potentiometer setting and the brightness of your "eye" LEDs.
 * Quantify the linear trend between your potentiometer setting and the blinking rate of the "nose" LED.
-* Quantify the accuracy (think 95% CI) of your heartbeat LED blinking at 1 Hz.
+* Quantify the accuracy and precision (95% CI) of your heartbeat LED blinking (frequency and duty cycle) in the (a) `IDLE` and (b) `LED TOGGLE OUTPUT` states.
 * Discuss any disagreements between your testing results and the expected results from the specifications.
 
 ## What to Submit
