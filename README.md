@@ -140,38 +140,37 @@ Populate the  [testing/technical_report.ipynb](testing/technical_report.ipynb) J
 
 ## Grading Criteria
 
-* Enclosure (25%)
+* Project Management (15%)
+  * Git repository version control workflow
+  * Project organization
+* Enclosure (20%)
   * Complexity
   * Internal mounting of PCB and battery
   * Secure panel mounting of switches and potentiometers
   * Fit of pieces
   * Meets size constraints
-  * git repository organization
-* Circuit (25%)
+* Circuit (20%)
   * Correctness of circuit
   * Correctness of PCB layout
   * Soldering / wire routing / heat shrink tubing
   * Mounting
-  * git repository organization
-* Firmware (25%)
+* Firmware (20%)
   * State maching implementation
   * Use of macros, variables, strcuts, etc.
   * Interrupts
   * Modularity of code (e.g., functions)
   * Readability of code
-  * git repository organization
 * Testing (25%)
   * Technical report
   * Data analysis
-  * Live demo
-  * git repository organization
 
 ### Letter Grade Equivalents
 
-* A[+/-]: Industry internship worthy
-* B[+/-]: Good, but needs some work
-* C[+/-]: Passable, but needs significant work
-* D: Major flaws
+* A[+/-]: Industry internship worthy; minor improvements could be made; good technical documentation.
+* B[+/-]: Good, but multiple minor improvements affect primary functionality; good technical documentation.
+* C[+/-]: Multiple minor and some major design / implementation flaws; passable technical documentation.
+* D: Multiple major flaws that significantly compromise functionality; poor technical documentation.
+* F: Significant components of project / technical documentation are incomplete.
 
 ## Resources
 
