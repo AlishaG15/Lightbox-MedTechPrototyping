@@ -1,12 +1,12 @@
 ---
 ERC:
   stage: test
-  image: kicad/kicad:8.0.5
+  image: ghcr.io/kicad/kicad:9.0
   script:
     - kicad-cli sch erc --exit-code-violations circuit/circuit.kicad_sch
 
 DRC:
   stage: test
-  image: kicad/kicad:8.0.5
+  image: ghcr.io/kicad/kicad:9.0
   script:
     - kicad-cli pcb drc --exit-code-violations circuit/circuit.kicad_pcb
