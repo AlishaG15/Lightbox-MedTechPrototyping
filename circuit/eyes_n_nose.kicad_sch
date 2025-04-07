@@ -847,7 +847,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 			(at 187.452 68.58 90)
 			(effects
 				(font
@@ -917,7 +917,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "IRFZ44N:TO254P1016X419X2286-3"
+		(property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical"
 			(at 140.97 85.09 0)
 			(effects
 				(font
@@ -1099,7 +1099,7 @@
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
-		(on_board yes)
+		(on_board no)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d6364166-277c-4633-bc50-4ab17378f9e3")
