@@ -443,6 +443,7 @@
       "single_global_label": "ignore",
       "unannotated": "error",
       "unconnected_wire_endpoint": "warning",
+      "undefined_netclass": "error",
       "unit_value_mismatch": "error",
       "unresolved_variable": "error",
       "wire_dangling": "error"
@@ -615,18 +616,6 @@
     [
       "30bcb3ae-56d0-416a-8d82-b0f8974ec7dd",
       "Root"
-    ],
-    [
-      "fa9bd5c2-163e-492a-a555-212a6ea9d57b",
-      "eyes-n-nose"
-    ],
-    [
-      "88675b89-5413-429e-ba98-9130fec40090",
-      "button_n_pots"
-    ],
-    [
-      "7755daed-d6c8-41be-9e2c-b50ae1e2f027",
-      "power"
     ]
   ],
   "text_variables": {}
