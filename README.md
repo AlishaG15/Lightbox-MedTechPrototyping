@@ -6,6 +6,32 @@ the Arduino Nano Every.
 You are expected to use best `git` version control practices for this project,
 including meaningful, focused commits with good commit messages.
 
+## Project Management / Implementation Expectations
+
+- Fork this git repository and add Dr. Palmeri as a `Maintainer`.
+
+- Questions about debugging code should be submitted as GitLab Issues that are
+assigned to your TAs (they can escalated to me).
+
+- Include your KiCad project in a subdirectory called `circuit/`.
+
+- Include your CAD model in a subdirectory called `cad/`, including the files
+described above.
+
+## Circuit
+
+- Please include your entire KiCad project in a directory called `circuit/`
+within your git repository.
+
+- A project template, along with design rules and one project-specific part, are
+included in `circuit/` for you to use as a starting point.
+
+### Arduino Nano Every Pinout
+
+**Remember that only digital pins annotated with a `~` in the Arduino Nano Every pinout can be used for PWM.**
+
+<img src="images/arduino_nano_every_pinout.png" alt="pinout" width="800"/>
+
 ## Functional Specifications
 
 ### Electronics / PCB
@@ -75,6 +101,29 @@ the function above, but is **not** the solution for the specifications below!!
 - Have the on-board Nano Every LED (`D13`) act as a "heartbeat" LED blinking at
 1 Hz in all states.
 
+- Final firmware should use "best" coding practices discussed in lecture,
+including:
+
+  - Good firmware architecture:
+
+    - `#include`
+
+    - `#define` (MACROS for all pin mappings, specification values, etc.)
+
+    - Function declarations
+
+    - Global variable definitions
+
+    - State machine framework
+
+    - `setup()`
+
+    - `loop()` using state machine framework
+
+    - Function definitions
+
+  - Interrupts for all "events"
+
 ### Enclosure
 
 - Make an enclosure of a Blue Devil (or some other fun figure) where two LEDs
@@ -107,55 +156,6 @@ are the eyes and a third LED is the nose.
 <img src="cad/example01.png" alt="example01" width="400"/>)
 <img src="cad/example02a.png" alt="example02a" width="400"/>)
 <img src="cad/example02b.png" alt="example02b" width="400"/>)
-
-## Project Management / Implementation Expectations
-
-- Fork this git repository and add Dr. Palmeri as a `Maintainer`.
-
-- Questions about debugging code should be submitted as GitLab Issues that are
-assigned to your TAs (they can escalated to me).
-
-- Include your KiCad project in a subdirectory called `circuit/`.
-
-- Include your CAD model in a subdirectory called `cad/`, including the files
-described above.
-
-- Final firmware should use "best" coding practices discussed in lecture,
-including:
-
-  - Good firmware architecture:
-
-    - `#include`
-
-    - `#define` (MACROS for all pin mappings, specification values, etc.)
-
-    - Function declarations
-
-    - Global variable definitions
-
-    - State machine framework
-
-    - `setup()`
-
-    - `loop()` using state machine framework
-
-    - Function definitions
-
-  - Interrupts for all "events"
-
-## Circuit
-
-- Please include your entire KiCad project in a directory called `circuit/`
-within your git repository.
-
-- A project template, along with design rules and one project-specific part, are
-included in `circuit/` for you to use as a starting point.
-
-### Arduino Nano Every Pinout
-
-**Remember that only digital pins annotated with a `~` in the Arduino Nano Every pinout can be used for PWM.**
-
-<img src="images/arduino_nano_every_pinout.png" alt="pinout" width="800"/>
 
 ## Testing
 
@@ -201,7 +201,7 @@ of this project just like a final exam timeslot.
 submission from GitLab and grade it there.
 
 ## Grading Criteria
-    
+
 - Project Management (15%)
   - Git repository version control workflow
   - Project organization
