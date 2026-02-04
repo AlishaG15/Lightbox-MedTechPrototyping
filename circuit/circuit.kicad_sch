@@ -3028,9 +3028,9 @@
 		)
 		(uuid "0d1a2d68-c12f-423a-85ca-c8257e71d6fd")
 	)
-	(text "Reminders:\n- Voltage drops top-to-bottom\n- Signal flow left-to-right"
+	(text "Reminders:\n- Voltage drops top-to-bottom\n- Signal flow left-to-right\n- Exclude items from board that are not attached to the PCB.\n- Use connectors for all non-board mounted connections."
 		(exclude_from_sim no)
-		(at 16.764 20.828 0)
+		(at 15.748 24.892 0)
 		(effects
 			(font
 				(size 1.27 1.27)
