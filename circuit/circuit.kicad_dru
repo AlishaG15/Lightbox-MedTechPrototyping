@@ -14,3 +14,8 @@
 (rule "Hole Size"
 	(constraint hole_size (min 0.8mm) (max 3.2mm))
 )
+
+(rule "Pin Header 1x02 Clearance"
+	(condition "A.Footprint == '*PinHeader*1x02*' || B.Footprint == '*PinHeader*1x02*'")
+	(constraint clearance (min 150mil))
+)
