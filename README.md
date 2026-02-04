@@ -30,13 +30,6 @@ Below is a checklist of things students typically overlook on first pass / shoul
 
 #### Component Footprints
 
-When choosing a footprint for components, such as resistors, make sure to choose
-one that will physically allow the component to sit flust on the PCB.  For
-example, a low-wattage, ceramic THT resistor, needs ~10 mm of space (pitch)
-between its leads to sit flush on a PCB:
-
-<img src="images/resistor_tht_footprint.png" alt="resistor_tht_footprint" width="600"/>
-
 Below is a table of the parts you will use in your circuit:
 
 | Description | Part Number | Digikey Part Number |
