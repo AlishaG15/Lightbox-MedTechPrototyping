@@ -25,7 +25,7 @@ connected to the board individually using 1x2 connectors.
 - Each output LED should be driven with a digital output signal input into an
 `IRFZ44` MOSFET that delivers power to each LED.
 
-#### Commonly Missed Items Checklist
+### Commonly Missed Items Checklist
 
 Below is a checklist of things students typically overlook on first pass /
 should include in their schematics:
@@ -42,7 +42,7 @@ should include in their schematics:
 
 - [ ] Make sure your ERC and DRC pass before submitting for review / milling.
 
-#### Component Footprints
+### Component Footprints
 
 Below is a table of the parts you will use in your circuit:
 
