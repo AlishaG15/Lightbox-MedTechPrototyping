@@ -37,10 +37,6 @@ between its leads to sit flush on a PCB:
 
 <img src="images/resistor_tht_footprint.png" alt="resistor_tht_footprint" width="600"/>
 
-:warning: The outline for the 2-pin connectors in KiCad is a bit smaller than the connector bodies that we have.  Give yourself some extra space to prevent the connector bodies from interfering with one another.
-
-<img src="images/connector_interference.png" alt="connector interference" width="600"/>
-
 Below is a table of the parts you will use in your circuit:
 
 | Description | Part Number | Digikey Part Number |
