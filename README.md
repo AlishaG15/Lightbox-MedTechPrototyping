@@ -8,7 +8,7 @@ including meaningful, focused commits with good commit messages.
 
 ## Project Management / Implementation Expectations
 
-- Fork this git repository and add Dr. Palmeri as a `Maintainer`.
+- Fork this git repository and add Dr. Palmeri (`mlp6`) as a `Maintainer`.
 
 - Questions about debugging code should be submitted as GitLab Issues that are
 assigned to your TAs (they can escalated to me).
@@ -189,16 +189,16 @@ results from the specifications.
 - Make sure that your git repository containts the firmware, CAD and KiCad
 components described above.
 
-- Push an annotated tag to your repository called `final_project_submission`
-that contains the final commit of your project.
+- Push a `v1.0.0` annotated tag to your repository that contains the final
+commit of your project on the `main` branch.
 
 - Create an Issue assigned to Dr. Palmeri titled `Final Project Complete`.
 
 - **NO LATE SUBMISSIONS ARE ACCEPTED FOR THIS PROJECT.**  Treat the submission
 of this project just like a final exam timeslot.
 
-- Nothing needs to be uploaded to Gradescope by you.  I will pull your final
-submission from GitLab and grade it there.
+- Upload a PDF of your technical report prepared in your Jupyter notebook to the
+associated Gradescope assignment.
 
 ## Grading Criteria
 
