@@ -21,18 +21,18 @@
 void button_callback();
 
 // setup state machine enum and variable
-enum states {IDLE, READ_ADC, CALC_ON_TIME, TOGGLE_LED};
+enum states {IDLE_ENTRY, IDLE, IDLE_EXIT, READ_ADC, CALC_ON_TIME, TOGGLE_LED};
 // volatile keyword used to insure integrity of value when manipulated by an ISR
 volatile int state = IDLE;
 
 // setup is run once when the device is powered on
 void setup() {
     // enable digital pins
-    // pinMode(LED_PIN, OUTPUT);
-    // pinMode(BUTTON_INTERRUPT_PIN, INPUT_PULLUP); // pull pin up to HIGH if not driven by input signal
+    pinMode(LED_PIN, OUTPUT);
+    pinMode(BUTTON_INTERRUPT_PIN, INPUT_PULLUP); // pull pin up to HIGH if not driven by input signal
     
     // associate an ISR with a pin event
-    // attachInterrupt(digitalPinToInterrupt(BUTTON_INTERRUPT_PIN), button_callback, FALLING);
+    attachInterrupt(digitalPinToInterrupt(BUTTON_INTERRUPT_PIN), button_callback, FALLING);
     
     // start the serial (communication) monitor
     // 9600 is the baud rate (rate of data communication, 9600 bits/s)
@@ -45,13 +45,33 @@ void setup() {
 // state variable enum value
 void loop() {
     
+    // don't use blocking statements
+    //delay(500);
+    //blink_HB();
+    //delay(500);
+
+    last_toggled_HB = this_time;
+    if (current_time - last_toggled_HB >= MACRO_REPRESNTING_500MS) {
+        digitalWrite(HB_PIN, !digitalRead(HB_PIN)); //toggle HB state
+        last_toggled_HB = current_time; //update last toggled time
+    }
+
     // add state-agnostic code here
     unsigned long current_time_ms = millis();
 
 
     // state machine
     switch (state) {
+        attatchInterupt(digitalPinToInterrupt(BUTTON_INTERRUPT_PIN), button_callback, FALLING);
+        break;
+
+        case IDLE_ENTRY:
+            break;
         case IDLE:
+            break;
+
+        case IDLE_EXIT:
+            detachInterrupt(digitalPinToInterrupt(BUTTON_INTERRUPT_PIN));
             break;
         // ideally disable the button ISR (detachInterrupt) while in the following states
         case READ_ADC:
@@ -59,10 +79,15 @@ void loop() {
             state = CALC_ON_TIME;
             break;
         case CALC_ON_TIME:
+            map(); //MAP FUNCTION!
             calc_on_time();
             state = TOGGLE_LED;
             break;
+
+        case TOGGLE_ENTRY:
+            //get current time to track elapsed time for keeping output LEDs on
         case TOGGLE_LED:
+            analogWrite(LED_PIN, 255); // 8 bit
             /* Toggle LED on/off state based on duty cycle and blink rate
 
             You may be tempted to use delay() statements; resist that temptation.
@@ -75,6 +100,13 @@ void loop() {
                     save_new_time_to_toggle
                 }
             */
+
+            /* if (current_time_ms > (next_on_toggle_time_ms + on_time_ms)) {
+
+                state = TOGGLE_EXIT;
+            } 
+                
+            //logic for blinking
 
             break;
         default:  // this is a catch-all for any unexpected state
