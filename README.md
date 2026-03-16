@@ -82,7 +82,9 @@ Below is a table of the parts you will use in your circuit:
 | 9V Battery | ZEUS 9V | 2059-ZEUS9V-ND |
 | Battery Connector | 232 | 36-232-ND |
 | 2 Pin Connector | B02B-XASK-1 | 455-B02B-XASK-1-ND |
+| 3 Pin Connector | B03B-XASK-1 | 455-B03B-XASK-1-ND |
 | 2 Pin Jumper | A02XAF02XAF22K152B | 455-3061-ND |
+| 3 Pin Jumper | A03KR03KR26E152B | 455-3379-ND |
 | 10k Potentiometer | PDB181-E420K-103B | PDB181-E420K-103B-ND |
 | Transistor | IRFZ44 | (TO220 Packaging) |
 
