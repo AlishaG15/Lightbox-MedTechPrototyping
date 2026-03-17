@@ -1,5 +1,4 @@
 (version 1)
-# adapted from: https://github.com/labtroll/KiCad-DesignRules/blob/main/JLCPCB/JLCPCB.kicad_dru
 
 (rule "Track Width"
 	(condition "A.Type == 'track'")
@@ -7,7 +6,7 @@
 )
 
 (rule "Track Clearance"
-	(condition "A.Type == 'track' && B.Type == A.Type")
+	(condition "A.Type != 'pad' && B.Type != 'pad'")
 	(constraint clearance (min 32mil))
 )
 
@@ -18,4 +17,24 @@
 (rule "Hole Clearance"
 	(condition "A.Type == 'pad' && A.Pad_Type == 'NPTH'")
 	(constraint hole_clearance (min 20mil))
+)
+
+(rule "Footprints on F.Cu"
+	(condition "A.Type == 'footprint' && A.Layer != 'F.Cu'")
+	(constraint disallow footprint)
+)
+
+(rule "Tracks on B.Cu"
+	(condition "A.Type == 'track' && A.Layer != 'B.Cu'")
+	(constraint disallow track)
+)
+
+(rule "Pads on B.Cu"
+	(condition "A.Type == 'pad' && A.Pad_Type != 'Through_Hole' && A.Layer != 'B.Cu'")
+	(constraint disallow pad)
+)
+
+(rule "Zones on B.Cu"
+	(condition "A.Type == 'zone' && A.Layer != 'B.Cu'")
+	(constraint disallow zone)
 )
