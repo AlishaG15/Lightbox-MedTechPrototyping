@@ -1,137 +1,136 @@
-// LOAD ALL LIBRARIES FIRST
 #include <Arduino.h>
 
-// DEFINE ALL PREPROCESSOR MACROS
-// see pinout in datasheet to know what pins are where / do what
-// NOTE: macros are defined in ALL CAPS to help identify their usage in the code (in contrast to variables)
-// All device specification-related values should be defined here, *not* in the downstream code!  You should
-// not have to search the code for where values are defined / used.
-//
-// REMEMBER THAT ONLY DIGITAL OUTPUT PINS ANNOCATED WITH A ~ ON THE PINOUT DIAGRAM CAN BE USED FOR PWM
+// Pins
+#define EYE_PIN    5
+#define NOSE_PIN   6
+#define HB_PIN     13
 
-#define LED_PIN 13  // D13
-#define BUTTON_INTERRUPT_PIN 2 // D2
-#define MONOSTABLE_POT_PIN A1
-#define ANALOG_READ_RANGE 1023 // 10-bit ((2**10)-1); 10-bit is specific to your microcontroller (see datasheet)
-#define MONOSTABLE_DURATION_MS 2000
+#define BUTTON_PIN 2
+#define POT_EYE    A0
+#define POT_NOSE   A1
 
-// DEFINE ALL VARIABLES AND STRUCTS
+// Limits
+#define ADC_MAX 1023
+#define PWM_MAX 255
 
-// DECLARE ALL FUNCTIONS (excluding loop() and setup())
-void button_callback();
+// Timing (ms)
+#define EYE_TIME   5000UL
+#define NOSE_TIME  10000UL
+#define BLINK_MIN  50UL
+#define BLINK_MAX  100UL
+#define HB_HALF    500UL
 
-// setup state machine enum and variable
-enum states {IDLE_ENTRY, IDLE, IDLE_EXIT, READ_ADC, CALC_ON_TIME, TOGGLE_LED};
-// volatile keyword used to insure integrity of value when manipulated by an ISR
-volatile int state = IDLE;
+// Function prototypes
+void buttonISR();
+void readInputs();
+void computeParams();
+void updateHeartbeat();
 
-// setup is run once when the device is powered on
+// Simple state machine
+enum State { IDLE, RUN };
+volatile State state = IDLE;
+
+// Global variables
+int eye_raw = 0;
+int nose_raw = 0;
+
+int eye_brightness = 0;        // PWM value for eye LEDs
+unsigned long blink_half = 0;  // half period for nose blinking
+
+unsigned long start_time = 0;
+unsigned long last_blink = 0;
+unsigned long last_hb = 0;
+
+bool nose_on = false;
+
 void setup() {
-    // enable digital pins
-    pinMode(LED_PIN, OUTPUT);
-    pinMode(BUTTON_INTERRUPT_PIN, INPUT_PULLUP); // pull pin up to HIGH if not driven by input signal
-    
-    // associate an ISR with a pin event
-    attachInterrupt(digitalPinToInterrupt(BUTTON_INTERRUPT_PIN), button_callback, FALLING);
-    
-    // start the serial (communication) monitor
-    // 9600 is the baud rate (rate of data communication, 9600 bits/s)
-    // set increments; slower is more reliable
-    Serial.begin(9600);
-    Serial.println("INF: Device initialized.");
+  pinMode(EYE_PIN, OUTPUT);
+  pinMode(NOSE_PIN, OUTPUT);
+  pinMode(HB_PIN, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);  // button active LOW
+
+  // interrupt triggers when button is pressed
+  attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), buttonISR, FALLING);
+
+  Serial.begin(9600);
 }
 
-// this loop continuous runs and switches the active state represented in the
-// state variable enum value
 void loop() {
-    
-    // don't use blocking statements
-    //delay(500);
-    //blink_HB();
-    //delay(500);
+  unsigned long now = millis();
 
-    last_toggled_HB = this_time;
-    if (current_time - last_toggled_HB >= MACRO_REPRESNTING_500MS) {
-        digitalWrite(HB_PIN, !digitalRead(HB_PIN)); //toggle HB state
-        last_toggled_HB = current_time; //update last toggled time
-    }
+  updateHeartbeat();  // blink onboard LED at 1 Hz
 
-    // add state-agnostic code here
-    unsigned long current_time_ms = millis();
+  switch (state) {
 
+    case IDLE:
+      // keep LEDs off while waiting for button press
+      analogWrite(EYE_PIN, 0);
+      analogWrite(NOSE_PIN, 0);
+      break;
 
-    // state machine
-    switch (state) {
-        attatchInterupt(digitalPinToInterrupt(BUTTON_INTERRUPT_PIN), button_callback, FALLING);
-        break;
+    case RUN:
 
-        case IDLE_ENTRY:
-            break;
-        case IDLE:
-            break;
+      // start_time == 0 is used as a sentinel to detect first entry into RUN;
+      // it is reset to 0 when the cycle ends so this block re-runs next cycle
+      if (start_time == 0) {
+        readInputs();                        // read potentiometers
+        computeParams();                     // convert to usable values
+        start_time = now;
+        last_blink = now;
+        nose_on = true;
+        analogWrite(NOSE_PIN, PWM_MAX);      // nose LED on immediately
+      }
 
-        case IDLE_EXIT:
-            detachInterrupt(digitalPinToInterrupt(BUTTON_INTERRUPT_PIN));
-            break;
-        // ideally disable the button ISR (detachInterrupt) while in the following states
-        case READ_ADC:
-            read_monostable_voltage();
-            state = CALC_ON_TIME;
-            break;
-        case CALC_ON_TIME:
-            map(); //MAP FUNCTION!
-            calc_on_time();
-            state = TOGGLE_LED;
-            break;
+      // eye LEDs on for 5 seconds
+      if (now - start_time < EYE_TIME) {
+        analogWrite(EYE_PIN, eye_brightness);
+      } else {
+        analogWrite(EYE_PIN, 0);
+      }
 
-        case TOGGLE_ENTRY:
-            //get current time to track elapsed time for keeping output LEDs on
-        case TOGGLE_LED:
-            analogWrite(LED_PIN, 255); // 8 bit
-            /* Toggle LED on/off state based on duty cycle and blink rate
+      // nose LED blinks for 10 seconds
+      if (now - start_time < NOSE_TIME) {
+        if (now - last_blink >= blink_half) {
+          nose_on = !nose_on;
+          analogWrite(NOSE_PIN, nose_on ? PWM_MAX : 0);
+          last_blink = now;
+        }
+      } else {
+        // finished cycle, go back to idle
+        analogWrite(NOSE_PIN, 0);
+        state = IDLE;
+        start_time = 0;
+      }
 
-            You may be tempted to use delay() statements; resist that temptation.
-            Delays are "blocking" and stall the device from responding to other events.
-
-            Instead, consider testing for when to toggle an LED by checking for elapsed time in a fast-running loop:
-                if (current_time_ms > next_on_toggle_time_ms)
-                {
-                    digitalWrite(LED_PIN, HIGH/LOW/??);
-                    save_new_time_to_toggle
-                }
-            */
-
-            /* if (current_time_ms > (next_on_toggle_time_ms + on_time_ms)) {
-
-                state = TOGGLE_EXIT;
-            } 
-                
-            //logic for blinking
-
-            break;
-        default:  // this is a catch-all for any unexpected state
-            break;
-    }
-
+      break;
+  }
 }
 
-void button_callback() {
-    /* Interupt Service Routine (ISR)
-    Code in this ISR must consume minimal resources and run quickly.
-    */
-   state = READ_ADC;  // this will cause the switch statement in the loop to change to the READ_ADC state (case)
+// interrupt: starts system when button is pressed
+void buttonISR() {
+  if (state == IDLE) {
+    state = RUN;
+  }
 }
 
-void read_astable_voltage() {
-    /* Read the astable potentiometer voltage */
-    // astable_pot_voltage_raw= analogRead(ASTABLE_POT_PIN);
-    Serial.print("DBG: Astable pot voltage: ");
-    //Serial.println(astable_pot_voltage_raw);
+// read both potentiometers
+void readInputs() {
+  eye_raw = analogRead(POT_EYE);
+  nose_raw = analogRead(POT_NOSE);
 }
 
-void read_monostable_voltage() {
-    /* Read the astable potentiometer voltage */
-    // monostable_pot_voltage_raw = analogRead(MONOSTABLE_POT_PIN);
-    Serial.print("DBG: Monostable pot voltage: ");
-    //Serial.println(monostable_pot_voltage_raw);
+// convert readings to brightness and blink rate
+void computeParams() {
+  eye_brightness = map(eye_raw, 0, ADC_MAX, 0, PWM_MAX);
+  blink_half = map(nose_raw, 0, ADC_MAX, BLINK_MAX, BLINK_MIN);
+}
+
+// toggle onboard LED every 500 ms (1 Hz)
+void updateHeartbeat() {
+  unsigned long now = millis();
+
+  if (now - last_hb >= HB_HALF) {
+    digitalWrite(HB_PIN, !digitalRead(HB_PIN));
+    last_hb = now;
+  }
 }
