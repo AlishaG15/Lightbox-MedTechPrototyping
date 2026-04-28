@@ -2,8 +2,6 @@
 
 A custom embedded systems project built for BME 254 at Duke University — a 3D-printed panda enclosure housing a hand-soldered PCB, Arduino Nano Every, and three independently controlled LEDs (two eyes and a nose).
 
-![Panda lit up](images/IMG_6921.jpeg)
-
 ---
 
 ## Overview
