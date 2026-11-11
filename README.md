@@ -1,6 +1,6 @@
 # Lightbox
 
-A custom embedded systems project built for BME 254 at Duke University — a 3D-printed panda enclosure housing a hand-soldered PCB, Arduino Nano Every, and three independently controlled LEDs (two eyes and a nose).
+A custom embedded systems project built for MedTech Prototyping (BME 254) at Duke University, Spring 2026 — a 3D-printed panda enclosure housing a hand-soldered PCB, Arduino Nano Every, and three independently controlled LEDs (two eyes and a nose).
 
 ---
 
@@ -45,7 +45,7 @@ IDLE ──(button press)──▶ ANALOG_READ ──▶ LED_OUTPUT ──(10 s 
 
 ## Testing Results
 
-All measurements taken with a Tektronix TBS 1102B oscilloscope.
+All measurements taken with a Tektronix TBS 1102B oscilloscope. Full analysis, with regression fits and 95% confidence intervals, is in the [technical report](testing/technical_report.ipynb) ([HTML version](testing/technical_report.html)); raw data is in [`testing/`](testing).
 
 **Heartbeat LED**
 - Period: 1000 ms, Frequency: 1.000 Hz, Duty cycle: 50.0%
@@ -71,6 +71,18 @@ All measurements taken with a Tektronix TBS 1102B oscilloscope.
 | Internals (PCB) | Internals (Arduino + connectors) |
 |---|---|
 | ![pcb](images/IMG_6919.jpeg) | ![arduino](images/IMG_6920.jpeg) |
+
+---
+
+## Repository Layout
+
+| Folder | Contents |
+|---|---|
+| [`src/`](src) | Firmware (`main.cpp`) |
+| [`circuit/`](circuit) | KiCad schematic, PCB layout and MOSFET footprint |
+| [`cad/`](cad) | Enclosure renders |
+| [`testing/`](testing) | Oscilloscope data and technical report |
+| [`images/`](images) | Photos of the assembled device |
 
 ---
 
